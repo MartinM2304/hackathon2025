@@ -32,7 +32,7 @@ func postEmoji(c *fiber.Ctx) error {
 	}
 
 	services.RegisterEmojiVote(
-		models.Emoji{Id: emoji.Emoji, IpAddr: c.Context().Response.RemoteAddr().String()},
+		models.Emoji{Id: emoji.Emoji, IpAddr: string(c.Request().Host())},
 	)
 
 	c.Status(200)

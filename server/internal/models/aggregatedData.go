@@ -8,12 +8,12 @@ type AggregatedData struct {
 func (a AggregatedData) ToString() string {
 	directionStr := "No data"
 	if a.Direction != nil {
-		directionStr = a.Direction.toString()
+		directionStr = directionToString(*a.Direction)
 	}
 
 	emojiStr := "No data"
 	if a.Emoji != nil {
-		emojiStr = a.Emoji.toString()
+		emojiStr = emojiToString(*a.Emoji)
 	}
 
 	return "Direction: " + directionStr + ", Emoji: " + emojiStr
