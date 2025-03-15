@@ -1,9 +1,20 @@
 package models
 
-type Direction byte
+type Direction struct {
+	Id     byte
+	IpAddr string
+}
+
+func (e *Direction) DbData() DbData {
+	return DbData{
+		DataType: "direction",
+		Value:    int(e.Id),
+		IpAddr:   e.IpAddr,
+	}
+}
 
 const (
-	Up Direction = iota
+	Up byte = iota
 	Down
 	RotateLeft
 	RotateRight
