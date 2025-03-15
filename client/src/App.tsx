@@ -3,13 +3,14 @@ import { VideoPlayer } from './VidePlayer'
 import { Button } from './components/ui/button'
 import DirectionButton, { DIRECTIONS } from './mainView/DirectionButton'
 import EmojiButton, { EMOJIS } from './mainView/EmojiButton'
+import SoundList from './mainView/SoundList'
 
 function App() {
   const [count, setCount] = useState(0)
 
   const handleDirectionClick = async (direction: number) => {
     try {
-      const response = await fetch("http://localhost:3000/api/direction", {
+      const response = await fetch("/api/direction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,6 +45,44 @@ function App() {
       console.log(`Emoji ${emoji} sent successfully`);
     } catch (error) {
       console.error("Error sending emoji:", error);
+    }
+  };
+
+  const upArrow = (
+    <svg data-name="1-Arrow Up" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="white">
+      <path d="m26.71 10.29-10-10a1 1 0 0 0-1.41 0l-10 10 1.41 1.41L15 3.41V32h2V3.41l8.29 8.29z" />
+    </svg>
+  );
+
+  const downArrow = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="white">
+      <path d="M26.29 20.29 18 28.59V0h-2v28.59l-8.29-8.3-1.42 1.42 10 10a1 1 0 0 0 1.41 0l10-10z" data-name="2-Arrow Down"/>
+    </svg>
+  );
+
+  const leftArrow = (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="white">
+      <path d="M32 15H3.41l8.29-8.29-1.41-1.42-10 10a1 1 0 0 0 0 1.41l10 10 1.41-1.41L3.41 17H32z" data-name="4-Arrow Left"/>
+    </svg>
+  );
+
+  const handleSoundClick = async (sound: number) => {
+    try {
+      const response = await fetch("/api/sound", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sound }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send sound");
+      }
+
+      console.log(`Sound ${sound} sent successfully`);
+    } catch (error) {
+      console.error("Error sending sound:", error);
     }
   };
 
@@ -89,7 +128,7 @@ function App() {
         </div>
       </div>
     )
-  };
+  }
 
   const renderEmojiButtons = () => {
     const smileEmoji = (
@@ -138,6 +177,7 @@ function App() {
     <div>
       {renderDirectionButtons()}
       {renderEmojiButtons()}
+      <SoundList onSoundClick={handleSoundClick} style={{ marginTop: '10px' }}/> {/* Removed empty curly braces */}
     </div>
   );
 }

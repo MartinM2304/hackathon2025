@@ -1,8 +1,6 @@
 package web
 
 import (
-	"strconv"
-
 	"github.com/MartinM2304/hackathon2025/internal/models"
 	"github.com/MartinM2304/hackathon2025/internal/services"
 	"github.com/gofiber/fiber/v2"
@@ -17,24 +15,29 @@ func postDirection(c *fiber.Ctx) error {
 
 	services.RegisterDirectionVote(direction.Direction)
 
-	return c.Status(200).JSON(fiber.Map{
-		"message":   "Direction received successfully",
-		"direction": direction,
-	})
+	c.Status(200)
+	return nil
 }
 
-func getDirections(c *fiber.Ctx) error {
-	directions := services.GetDirections()
-	return c.JSON(directions)
+func postEmoji(c *fiber.Ctx) error {
+	emoji := new(models.EmojiJson)
+
+	if err := c.BodyParser(emoji); err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+
+	services.RegisterEmojiVote(emoji.Emoji)
+
+	c.Status(200)
+	return nil
 }
 
 func getData(c *fiber.Ctx) error {
-	err, direction := services.GetAggregatedDirection()
+	err, data := services.GetAggregatedData()
 	if err != nil {
-		c.Status(404)
-		return err
+		return c.Status(404).SendString(err.Error())
 	}
 
-	c.Status(200).Write([]byte(strconv.Itoa(int(direction))))
+	c.Status(200).JSON(data)
 	return nil
 }
