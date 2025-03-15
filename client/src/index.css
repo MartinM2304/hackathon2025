@@ -4,6 +4,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.video-js {
+  position: relative !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
