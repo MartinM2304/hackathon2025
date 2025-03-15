@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gofiber/contrib/socketio"
 	"github.com/gofiber/contrib/websocket"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
 	"log/slog"
 	"os"
@@ -68,6 +69,7 @@ func main() {
 		}
 		return fiber.ErrUpgradeRequired
 	})
+	wsRouter.Use(cors.New(cors.Config{AllowOrigins: "*"}))
 
 	wsRouter.Get("/", socketio.New(func(kws *socketio.Websocket) {}))
 
