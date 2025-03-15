@@ -5,10 +5,10 @@ import { VideoPlayer } from './VidePlayer';
 
 function App() {
   return (
-    <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex flex-col md:flex-row h-screen bg-gray-900 text-white">
       <VideoPlayer src='http://robot.g8row.xyz/hls/robot.m3u8' />
     
-      <div className="w-96 bg-gray-800 p-4">
+      <div className="w-full md:w-96 p-8 bg-gray-800 h-full">
         {/* Chat Section */}
         {/* <div className="mb-6">
           <h2 className="mb-2 text-lg font-semibold">Chat</h2>
@@ -21,12 +21,10 @@ function App() {
         </div> */}
 
         {/* Actions Section */}
-        <div className="space-y-4">
-          <div>
+        <div className="flex flex-col gap-6 w-full">
             <DirectionButtons />
             <EmojiButtons />
             <SoundList />
-          </div>
         </div>
       </div>
     </div>
