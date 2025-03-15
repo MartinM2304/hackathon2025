@@ -1,24 +1,70 @@
 import { SmileEmoji } from "@/svg/SmileEmoji";
-import EmojiButton, { EMOJIS } from "./EmojiButton";
 import { AngryEmoji } from "@/svg/AngryEmoji";
 import { SadEmoji } from "@/svg/SadEmoji";
 import { WowEmoji } from "@/svg/WowEmoji";
+import { useState } from "react";
+import StyledButton from "./StyledButton";
+
+const EMOJIS = {
+  SMILE: 0,
+  SAD: 1,
+  ANGRY: 2,
+  WOW: 3,
+};
 
 export default function EmojiButtons() {
     
+  const [isEnabled, setEnabled] = useState(true);
+
+  const handleEmojiClick = async (emoji: number) => {
+    if(!isEnabled) return;
+
+    setEnabled(false);
+
+    try {
+      const response = await fetch("/api/emoji", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ emoji }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send emoji");
+      }
+
+      console.log(`Emoji ${emoji} sent successfully`);
+    } catch (error) {
+      console.error("Error sending emoji:", error);
+    }
+
+    setTimeout(() => {
+      setEnabled(true);
+    }, 5000);
+  };
+
     return (
       <div style={{ display: "flex", gap: "5px", justifyContent: "center", marginTop: "30px" }}>
         <div style={{ gridArea: "smile" }}>
-          <EmojiButton emoji={EMOJIS.SMILE} svg={<SmileEmoji/>} />
+          <StyledButton isEnabled={isEnabled} svg={<SmileEmoji />} handler={() => {
+            handleEmojiClick(EMOJIS.SMILE);
+          }} />
         </div>
         <div style={{ gridArea: "angry" }}>
-          <EmojiButton emoji={EMOJIS.ANGRY} svg={<AngryEmoji />} />
+          <StyledButton isEnabled={isEnabled} svg={<AngryEmoji />} handler={() => {
+            handleEmojiClick(EMOJIS.ANGRY);
+          }} />
         </div>
         <div style={{ gridArea: "sad" }}>
-          <EmojiButton emoji={EMOJIS.SAD} svg={<SadEmoji />} />
+          <StyledButton isEnabled={isEnabled} svg={<SadEmoji />} handler={() => {
+            handleEmojiClick(EMOJIS.SAD);
+          }} />
         </div>
         <div style={{ gridArea: "right" }}>
-          <EmojiButton emoji={EMOJIS.WOW} svg={<WowEmoji />} />
+          <StyledButton isEnabled={isEnabled} svg={<WowEmoji />} handler={() => {
+            handleEmojiClick(EMOJIS.WOW);
+          }} />
         </div>
       </div>
     )
