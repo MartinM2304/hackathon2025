@@ -23,7 +23,7 @@ export default function DirectionButtons() {
       
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
-        const response = await fetch("${apiUrl}/api/direction", {
+        const response = await fetch(`${apiUrl}/api/direction`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
