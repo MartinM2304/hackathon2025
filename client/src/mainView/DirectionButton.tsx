@@ -11,16 +11,35 @@ export const DIRECTIONS = {
 interface DirectionButtonProps {
   svg: React.JSX.Element;
   direction: number;
-  onDirectionClick: (direction: number) => void;
 }
 
 const DirectionButton: React.FC<DirectionButtonProps> = ({
   svg,
   direction,
-  onDirectionClick,
 }) => {
+
+  const handleDirectionClick = async (direction: number) => {
+    try {
+      const response = await fetch("http://localhost:3000/api/direction", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ direction }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send direction");
+      }
+
+      console.log("Direction sent successfully");
+    } catch (error) {
+      console.error("Error sending direction:", error);
+    }
+  };
+
   return (
-    <Button onClick={() => onDirectionClick(direction)} className="p-4">
+    <Button onClick={() => handleDirectionClick(direction)} className="w-12 h-12">
       {svg}
     </Button>
   );

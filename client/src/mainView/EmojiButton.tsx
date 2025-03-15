@@ -11,16 +11,35 @@ export const EMOJIS = {
 interface EmojiButtonProps {
   svg: React.JSX.Element;
   emoji: number;
-  onEmojiClick: (direction: number) => void;
 }
 
 const EmojiButton: React.FC<EmojiButtonProps> = ({
   svg,
   emoji,
-  onEmojiClick,
 }) => {
+
+  const handleEmojiClick = async (emoji: number) => {
+    try {
+      const response = await fetch("/api/emoji", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ emoji }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send emoji");
+      }
+
+      console.log(`Emoji ${emoji} sent successfully`);
+    } catch (error) {
+      console.error("Error sending emoji:", error);
+    }
+  };
+
   return (
-    <Button onClick={() => onEmojiClick(emoji)} className="p-4">
+    <Button onClick={() => handleEmojiClick(emoji)} className="w-12 h-12">
       {svg}
     </Button>
   );
