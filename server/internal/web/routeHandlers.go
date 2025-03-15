@@ -2,14 +2,8 @@ package web
 
 import (
 	"github.com/MartinM2304/hackathon2025/internal/models"
+	"github.com/MartinM2304/hackathon2025/internal/services"
 	"github.com/gofiber/fiber/v2"
-	"sync"
-)
-
-// Thread-safe list of directions
-var (
-	directions []models.DirectionJson
-	mutex      sync.Mutex // Prevents race conditions
 )
 
 func postDirection(c *fiber.Ctx) error {
@@ -19,9 +13,7 @@ func postDirection(c *fiber.Ctx) error {
 		return c.Status(400).SendString(err.Error())
 	}
 
-	mutex.Lock()
-	directions = append(directions, *direction)
-	mutex.Unlock()
+	services.RegisterDirectionVote(direction.Direction)
 
 	return c.Status(200).JSON(fiber.Map{
 		"message":   "Direction received successfully",
@@ -30,8 +22,6 @@ func postDirection(c *fiber.Ctx) error {
 }
 
 func getDirections(c *fiber.Ctx) error {
-	mutex.Lock()
-	defer mutex.Unlock()
-
+	directions := services.GetDirections()
 	return c.JSON(directions)
 }
