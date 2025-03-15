@@ -5,6 +5,16 @@ type AggregatedData struct {
 	Emoji     *Emoji     `json:"emoji,omitempty"`
 }
 
-func (a *AggregatedData) ToString() string {
-	return "Direction: " + a.Direction.toString() + ", Emoji: " + a.Emoji.toString()
+func (a AggregatedData) ToString() string {
+	directionStr := "nil"
+	if a.Direction != nil {
+		directionStr = a.Direction.toString()
+	}
+
+	emojiStr := "nil"
+	if a.Emoji != nil {
+		emojiStr = a.Emoji.toString()
+	}
+
+	return "Direction: " + directionStr + ", Emoji: " + emojiStr
 }
