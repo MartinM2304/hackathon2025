@@ -39,6 +39,21 @@ func postEmoji(c *fiber.Ctx) error {
 	return nil
 }
 
+func postSound(c *fiber.Ctx) error {
+	sound := new(models.SoundJson)
+
+	if err := c.BodyParser(sound); err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+
+	services.RegisterSoundVote(
+		models.Sound{Id: sound.Sound, IpAddr: string(c.Request().Host())},
+	)
+
+	c.Status(200)
+	return nil
+}
+
 func getData(c *fiber.Ctx) error {
 	data := services.GetAggregatedData()
 
