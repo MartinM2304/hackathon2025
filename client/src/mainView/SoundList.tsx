@@ -1,6 +1,7 @@
 // SoundList.tsx
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { SERVER_URL } from "@/config";
 
 export const SOUNDS = {
   BARK: 0,
@@ -25,7 +26,7 @@ interface SoundButtonProps {
   
     const handleSoundClick = async (sound: number) => {
       try {
-        const response = await fetch("/api/sound", {
+        const response = await fetch(`${SERVER_URL}/api/sound`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
