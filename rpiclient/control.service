@@ -1,0 +1,13 @@
+[Unit]
+Description=Robot Control Service
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/hackathon2025/rpiclient
+ExecStart=/usr/bin/python3 -u control_service.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
