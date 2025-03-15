@@ -42,7 +42,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
   }, [src]);
 
   return (
-      <div className="w-full md:flex-1 md:p-4">
+      <div className="flex w-full md:p-4 justify-center items-center">
         <div className="relative aspect-video w-full rounded-lg bg-black">
           <div className="flex w-full aspect-video">
             <video ref={videoRef} className="video-js w-full h-full" />

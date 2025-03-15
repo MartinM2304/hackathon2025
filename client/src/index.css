@@ -125,3 +125,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Apply to the whole page */
+::-webkit-scrollbar {
+  width: 8px; /* Thin scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #121212; /* Dark background */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #444, #222); /* Cool gradient effect */
+  border-radius: 10px;
+  transition: background 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #666, #333); /* Lighter on hover */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333 #121212; /* Thumb | Track */
+}
