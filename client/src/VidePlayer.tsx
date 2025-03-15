@@ -1,46 +1,41 @@
-import React, {useRef, useEffect} from "react";
+import React, { useRef, useEffect } from "react";
 import videojs from "video.js";
 import Player from "video.js/dist/types/player";
-
+import "video.js/dist/video-js.css";
 
 interface VideoPlayerProps {
-    src: string;
+  src: string;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({src}) => {
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const playerRef = useRef<Player | null>(null);
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const playerRef = useRef<Player | null>(null);
 
+  useEffect(() => {
+    if (!videoRef.current) return;
 
-    useEffect(() => {
-        if(!playerRef.current && videoRef.current) {
-            const videoElement = document.createElement("video-js");
+    playerRef.current = videojs(videoRef.current, {
+      controls: true,
+      autoplay: false,
+      responsive: true,
+      sources: [{ src, type: "application/x-mpegURL" }],
+    });
 
-            videoRef.current.appendChild(videoElement);
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+    };
+  }, [src]);
 
-            playerRef.current = videojs(videoElement, {
-                controls: true,
-                fluid: true,
-                sources: [{ src, type: "application/x-mpegURL" }],
-        
-            });
-        }
-    }, [src]);
-
-    useEffect(() => {
-        const player = playerRef.current;
-        
-        return () => {
-            if(player && !player.isDisposed()) {
-                player.dispose();
-                playerRef.current = null;
-            }
-        };
-    }, []);
-
-    return (
-        <div data-vjs-player>
-            <video ref={videoRef} />
+  return (
+      <div className="flex-1 p-4">
+        <div className="relative aspect-video w-full rounded-lg bg-black">
+          <div className="flex w-full aspect-video">
+            <video ref={videoRef} className="video-js w-full h-full" />
+          </div>
         </div>
-    );
-}
+      </div>
+  );
+};
