@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, use } from "react";
 import videojs from "video.js";
 import Player from "video.js/dist/types/player";
+import "video.js/dist/video-js.css";
 import "video.js/dist/video-js.css";
 
 interface VideoPlayerProps {
@@ -26,6 +27,17 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src }) => {
         playerRef.current.dispose();
         playerRef.current = null;
       }
+    };
+  }, [src]);
+  
+  useEffect(() => {
+    const player = playerRef.current;
+
+    return () => {
+        if(player && !player.isDisposed()) {
+            player.dispose();
+            playerRef.current = null;
+        }
     };
   }, [src]);
 
