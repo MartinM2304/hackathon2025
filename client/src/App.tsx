@@ -21,7 +21,7 @@ function App() {
           </div>
         </div> */}
         {/* Log Display */}
-          <LogDisplay socketUrl="http://localhost:3000" />
+          <LogDisplay socketUrl="ws://localhost:3000/socket.io/"/>
         {/* Actions Section */}
         <div className="space-y-4">
           <div>

@@ -10,14 +10,20 @@ export class SocketService {
   }
 
   private connect(serverUrl: string) {
-    this.socket = io(serverUrl);
+    //this.socket = io(serverUrl);
+    this.socket = io(serverUrl, {
+        transports: ["websocket"], // Force WebSocket (avoiding HTTP polling)
+        withCredentials: false, // Disable CORS credentials mode
+        timeout: 20000,
+      });
 
     this.socket.on('connect', () => {
       console.log('Socket.IO connected');
     });
 
     this.socket.on('log', (log: string) => {
-      this.onLogReceived(log);
+        console.log("majka ti da eba")
+        this.onLogReceived(log);
     });
 
     this.socket.on('disconnect', () => {
