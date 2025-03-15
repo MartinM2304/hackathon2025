@@ -3,6 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/gofiber/contrib/socketio"
+	"github.com/gofiber/contrib/websocket"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
 	"log/slog"
 	"os"
@@ -46,8 +49,30 @@ func main() {
 		TimeZone:   "Europe/Sofia",
 	}))
 
+	socketio.On(socketio.EventConnect, func(ep *socketio.EventPayload) {
+		log.Printf("Connection event 1 - UUID: %s\n", ep.Kws.GetUUID())
+	})
+
+	socketio.On(socketio.EventDisconnect, func(ep *socketio.EventPayload) {
+		log.Printf("Disconnection event - UUID: %s\n", ep.Kws.GetUUID())
+	})
+
 	router := app.Group("/api")
 	web.Register(router)
+
+	wsRouter := app.Group("/socket.io")
+	wsRouter.Use(func(c *fiber.Ctx) error {
+		// IsWebSocketUpgrade returns true if the client
+		// requested upgrade to the WebSocket protocol.
+		if websocket.IsWebSocketUpgrade(c) {
+			c.Locals("allowed", true)
+			return c.Next()
+		}
+		return fiber.ErrUpgradeRequired
+	})
+	wsRouter.Use(cors.New())
+
+	wsRouter.Get("/", socketio.New(func(kws *socketio.Websocket) {}))
 
 	done := make(chan bool, 1)
 
@@ -78,6 +103,8 @@ func main() {
 				return
 			case <-ticker.C:
 				services.Aggregate()
+			case m := <-services.NotificationChannel:
+				socketio.Broadcast([]byte(m), socketio.TextMessage)
 			}
 		}
 	}()
