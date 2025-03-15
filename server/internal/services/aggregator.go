@@ -23,17 +23,17 @@ var (
 )
 
 var (
-	aggregatedDirections     models.Queue[byte]
+	aggregatedDirections     models.Queue[models.AgreggatedDirection]
 	aggregatedDirectionMutex sync.Mutex
 )
 
 var (
-	aggregatedEmojis      models.Queue[byte]
+	aggregatedEmojis      models.Queue[models.AgreggatedEmoji]
 	aggregatedEmojisMutex sync.Mutex
 )
 
 var (
-	aggregatedSounds      models.Queue[byte]
+	aggregatedSounds      models.Queue[models.AgreggatedSound]
 	aggregatedSoundsMutex sync.Mutex
 )
 
@@ -57,7 +57,10 @@ func aggregateDirections() {
 	}
 
 	aggregatedDirectionMutex.Lock()
-	aggregatedDirections.Enqueue(maxIdx)
+	aggregatedDirections.Enqueue(models.AgreggatedDirection{
+		Id:    maxIdx,
+		Count: maxCount,
+	})
 	aggregatedDirectionMutex.Unlock()
 }
 
@@ -81,7 +84,10 @@ func aggregateEmojis() {
 	}
 
 	aggregatedEmojisMutex.Lock()
-	aggregatedEmojis.Enqueue(maxIdx)
+	aggregatedEmojis.Enqueue(models.AgreggatedEmoji{
+		Id:    maxIdx,
+		Count: maxCount,
+	})
 	aggregatedEmojisMutex.Unlock()
 }
 
@@ -105,7 +111,10 @@ func aggregateSounds() {
 	}
 
 	aggregatedSoundsMutex.Lock()
-	aggregatedSounds.Enqueue(maxIdx)
+	aggregatedSounds.Enqueue(models.AgreggatedSound{
+		Id:    maxIdx,
+		Count: maxCount,
+	})
 	aggregatedSoundsMutex.Unlock()
 }
 

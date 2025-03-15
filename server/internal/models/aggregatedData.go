@@ -1,25 +1,31 @@
 package models
 
+import "strconv"
+
 type AggregatedData struct {
-	Direction *byte `json:"direction"`
-	Emoji     *byte `json:"emoji"`
-	Sound     *byte `json:"sound"`
+	Direction *AgreggatedDirection `json:"direction"`
+	Emoji     *AgreggatedEmoji     `json:"emoji"`
+	Sound     *AgreggatedSound     `json:"sound"`
 }
 
 func (a AggregatedData) ToString() string {
 	directionStr := "No data"
 	if a.Direction != nil {
-		directionStr = directionToString(*a.Direction)
+		directionStr = directionToString(
+			a.Direction.Id,
+		) + "(" + strconv.Itoa(
+			a.Direction.Count,
+		) + ")"
 	}
 
 	emojiStr := "No data"
 	if a.Emoji != nil {
-		emojiStr = emojiToString(*a.Emoji)
+		emojiStr = emojiToString(a.Emoji.Id) + "(" + strconv.Itoa(a.Emoji.Count) + ")"
 	}
 
 	soundStr := "No data"
 	if a.Sound != nil {
-		soundStr = soundToString(*a.Sound)
+		soundStr = soundToString(a.Sound.Id) + "(" + strconv.Itoa(a.Sound.Count) + ")"
 	}
 
 	return "Direction: " + directionStr + ", Emoji: " + emojiStr + ", Sound: " + soundStr
