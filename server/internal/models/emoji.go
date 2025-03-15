@@ -20,8 +20,8 @@ const (
 	Wow
 )
 
-func (e Emoji) toString() string {
-	switch e {
+func emojiToString(emoji byte) string {
+	switch emoji {
 	case Smile:
 		return "Smile"
 	case Sad:

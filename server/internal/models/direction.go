@@ -21,7 +21,7 @@ const (
 )
 
 func (d Direction) toString() string {
-	switch d {
+	switch d.Id {
 	case Up:
 		return "Up"
 	case Down:
