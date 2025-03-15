@@ -1,8 +1,8 @@
-import SmileEmoji from "@/svg/SmileEmoji";
+import { SmileEmoji } from "@/svg/SmileEmoji";
 import EmojiButton, { EMOJIS } from "./EmojiButton";
-import AngryEmoji from "@/svg/AngryEmoji";
-import SadEmoji from "@/svg/SadEmoji";
-import WowEmoji from "@/svg/WowEmoji";
+import { AngryEmoji } from "@/svg/AngryEmoji";
+import { SadEmoji } from "@/svg/SadEmoji";
+import { WowEmoji } from "@/svg/WowEmoji";
 
 export default function EmojiButtons() {
     
@@ -12,7 +12,7 @@ export default function EmojiButtons() {
           <EmojiButton emoji={EMOJIS.SMILE} svg={<SmileEmoji/>} />
         </div>
         <div style={{ gridArea: "angry" }}>
-          <EmojiButton emoji={EMOJIS.ANGRY} svg={<AngryEmoji/>} />
+          <EmojiButton emoji={EMOJIS.ANGRY} svg={<AngryEmoji />} />
         </div>
         <div style={{ gridArea: "sad" }}>
           <EmojiButton emoji={EMOJIS.SAD} svg={<SadEmoji />} />

@@ -39,7 +39,7 @@ const EmojiButton: React.FC<EmojiButtonProps> = ({
   };
 
   return (
-    <Button onClick={() => handleEmojiClick(emoji)} className="w-12 h-12">
+    <Button onClick={() => handleEmojiClick(emoji)} className="w-14 h-14 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-110 active:scale-90">
       {svg}
     </Button>
   );
