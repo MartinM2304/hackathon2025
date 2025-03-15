@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/gofiber/contrib/socketio"
+	"github.com/gofiber/contrib/websocket"
 	"log"
 	"log/slog"
 	"os"
@@ -44,6 +46,26 @@ func main() {
 		TimeFormat: "02-01-2006",
 		TimeZone:   "Europe/Sofia",
 	}))
+
+	app.Use(func(c *fiber.Ctx) error {
+		// IsWebSocketUpgrade returns true if the client
+		// requested upgrade to the WebSocket protocol.
+		if websocket.IsWebSocketUpgrade(c) {
+			c.Locals("allowed", true)
+			return c.Next()
+		}
+		return fiber.ErrUpgradeRequired
+	})
+
+	socketio.On(socketio.EventConnect, func(ep *socketio.EventPayload) {
+		log.Printf("Connection event 1 - UUID: %s\n", ep.Kws.GetUUID())
+	})
+
+	socketio.On(socketio.EventDisconnect, func(ep *socketio.EventPayload) {
+		log.Printf("Disconnection event - UUID: %s\n", ep.Kws.GetUUID())
+	})
+
+	app.Get("/ws/", socketio.New(func(kws *socketio.Websocket) {}))
 
 	router := app.Group("/api")
 	web.Register(router)
