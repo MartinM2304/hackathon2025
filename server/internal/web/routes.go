@@ -14,4 +14,6 @@ func Register(router fiber.Router) {
 
 	router.Post("/direction", postDirection)
 	router.Get("/direction", getDirections)
+
+	router.Get("/data", getData)
 }

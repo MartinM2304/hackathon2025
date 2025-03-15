@@ -7,12 +7,12 @@ import (
 )
 
 var (
-	directions []models.Direction
-	mutex      sync.Mutex
+	directions      []models.Direction
+	directionsMutex sync.Mutex
 )
 
 var (
-	aggregatedDirection      models.Queue[models.Direction]
+	aggregatedDirections     models.Queue[models.Direction]
 	aggregatedDirectionMutex sync.Mutex
 )
 
@@ -31,8 +31,17 @@ func Aggregate() error {
 		}
 	}
 
+	directionsMutex.Lock()
+	directions = []models.Direction{}
+	directionsMutex.Unlock()
+
+	if maxCount == 0 {
+		return nil
+	}
+
 	aggregatedDirectionMutex.Lock()
-	aggregatedDirection.Enqueue(maxIdx)
+	aggregatedDirections.Enqueue(maxIdx)
 	aggregatedDirectionMutex.Unlock()
+
 	return nil
 }
