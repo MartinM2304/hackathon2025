@@ -55,8 +55,7 @@ func main() {
 	done := make(chan bool, 1)
 
 	go func() {
-		port, _ := strconv.Atoi(os.Getenv("PORT"))
-		err := app.Listen(fmt.Sprintf(":%d", port))
+		err := app.Listen(":3000")
 		if err != nil {
 			slog.Error("http server error: %s", err.Error())
 		}
