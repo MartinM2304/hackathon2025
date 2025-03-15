@@ -39,7 +39,7 @@ const DirectionButton: React.FC<DirectionButtonProps> = ({
   };
 
   return (
-    <Button onClick={() => handleDirectionClick(direction)} className="w-12 h-12">
+    <Button onClick={() => handleDirectionClick(direction)} className="w-12 h-12 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-110 active:scale-90">
       {svg}
     </Button>
   );

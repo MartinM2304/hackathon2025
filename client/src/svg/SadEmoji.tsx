@@ -1,7 +1,17 @@
-export default function SadEmoji() {
-    return(
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13.5c-2.33 0-4.32-1.45-5.12-3.5h1.05c.71-1.22 1.83-2-3.07-2-1.24 0-2.36.78-3.07 2h1.05c-.8-2.05-2.79-3.5-5.12-3.5zM12 16.5c-2.33 0-4.32-1.45-5.12-3.5h1.05c.71 1.22 1.83 2 3.07 2 1.24 0 2.36-.78 3.07-2h1.05c-.8 2.05-2.79 3.5-5.12 3.5z" transform="rotate(180 12 12)"/>
-        </svg>
+import { SVGProps } from "react";
+
+export function SadEmoji(props: SVGProps<SVGSVGElement>) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 16 16"
+        className="size-8"
+      >
+        <path
+          fill="currentColor"
+          d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16M8 1.5a6.5 6.5 0 1 1 0 13a6.5 6.5 0 0 1 0-13M4 5a1 1 0 1 1 2 0a1 1 0 0 1-2 0m6 0a1 1 0 1 1 2 0a1 1 0 0 1-2 0m-5.002 7.199l-1.286-.772C4.586 9.973 6.179 9 8 9s3.413.973 4.288 2.427l-1.286.772C10.39 11.181 9.275 10.5 8 10.5s-2.389.681-3.002 1.699"
+        ></path>
+      </svg>
     )
-};
+  }
+  

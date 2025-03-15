@@ -1,7 +1,21 @@
-export default function SmileEmoji() {
-    return(
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 13.5c-2.33 0-4.32-1.45-5.12-3.5h1.05c.71 1.22 1.83 2 3.07 2 1.24 0 2.36-.78 3.07-2h1.05c-.8 2.05-2.79 3.5-5.12 3.5z" />
-        </svg>
+import { SVGProps } from "react";
+
+export function SmileEmoji(props?: SVGProps<SVGSVGElement>) {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512"
+        className="size-8"
+      >
+        <path
+          fill="currentColor"
+          d="M256 16C123.452 16 16 123.452 16 256s107.452 240 240 240s240-107.452 240-240S388.548 16 256 16m147.078 387.078a207.253 207.253 0 1 1 44.589-66.125a207.3 207.3 0 0 1-44.589 66.125"
+        ></path>
+        <path
+          fill="currentColor"
+          d="M152 200h40v40h-40zm168 0h40v40h-40zm18.289 107.2A83.6 83.6 0 0 1 260.3 360h-8.6a83.6 83.6 0 0 1-77.992-52.8l-1.279-3.2h-34.461L144 319.081A116 116 0 0 0 251.7 392h8.6A116 116 0 0 0 368 319.081L374.032 304h-34.464Z"
+        ></path>
+      </svg>
     )
-};
+  }
+  
