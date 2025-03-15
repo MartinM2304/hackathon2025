@@ -18,6 +18,13 @@ func RegisterEmojiVote(emoji models.Emoji) {
 	emojis = append(emojis, emoji)
 }
 
+func RegisterSoundVote(sound models.Sound) {
+	soundsMutex.Lock()
+	defer soundsMutex.Unlock()
+
+	sounds = append(sounds, sound)
+}
+
 func GetAggregatedData() models.AggregatedData {
 	aggregatedData := models.AggregatedData{}
 
@@ -39,6 +46,16 @@ func GetAggregatedData() models.AggregatedData {
 		aggregatedData.Emoji = &emoji
 	} else {
 		aggregatedData.Emoji = nil
+	}
+
+	if !aggregatedSounds.IsEmpty() {
+		aggregatedSoundsMutex.Lock()
+		sound := aggregatedSounds.Dequeue()
+		aggregatedSoundsMutex.Unlock()
+
+		aggregatedData.Sound = &sound
+	} else {
+		aggregatedData.Sound = nil
 	}
 
 	sendNotification(aggregatedData)

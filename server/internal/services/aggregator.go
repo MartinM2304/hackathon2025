@@ -18,6 +18,11 @@ var (
 )
 
 var (
+	sounds      []models.Sound
+	soundsMutex sync.Mutex
+)
+
+var (
 	aggregatedDirections     models.Queue[byte]
 	aggregatedDirectionMutex sync.Mutex
 )
@@ -25,6 +30,11 @@ var (
 var (
 	aggregatedEmojis      models.Queue[byte]
 	aggregatedEmojisMutex sync.Mutex
+)
+
+var (
+	aggregatedSounds      models.Queue[byte]
+	aggregatedSoundsMutex sync.Mutex
 )
 
 func aggregateDirections() {
@@ -75,9 +85,34 @@ func aggregateEmojis() {
 	aggregatedEmojisMutex.Unlock()
 }
 
+func aggregateSounds() {
+	soundsCounter := [4]int{0, 0, 0, 0}
+	for _, sound := range sounds {
+		soundsCounter[sound.Id] += 1
+	}
+
+	maxIdx := models.Bark
+	maxCount := soundsCounter[maxIdx]
+	for i, count := range soundsCounter {
+		if count > maxCount {
+			maxCount = count
+			maxIdx = byte(i)
+		}
+	}
+
+	if maxCount == 0 {
+		return
+	}
+
+	aggregatedSoundsMutex.Lock()
+	aggregatedSounds.Enqueue(maxIdx)
+	aggregatedSoundsMutex.Unlock()
+}
+
 func Aggregate() {
 	aggregateDirections()
 	aggregateEmojis()
+	aggregateSounds()
 
 	items := []models.DBser{}
 
@@ -89,6 +124,10 @@ func Aggregate() {
 		items = append(items, &direction)
 	}
 
+	for _, sound := range sounds {
+		items = append(items, &sound)
+	}
+
 	database.BatchInsertItems(items)
 
 	directionsMutex.Lock()
@@ -98,4 +137,8 @@ func Aggregate() {
 	emojisMutex.Lock()
 	emojis = []models.Emoji{}
 	emojisMutex.Unlock()
+
+	soundsMutex.Lock()
+	sounds = []models.Sound{}
+	soundsMutex.Unlock()
 }

@@ -3,6 +3,7 @@ package models
 type AggregatedData struct {
 	Direction *byte `json:"direction"`
 	Emoji     *byte `json:"emoji"`
+	Sound     *byte `json:"sound"`
 }
 
 func (a AggregatedData) ToString() string {
@@ -16,5 +17,10 @@ func (a AggregatedData) ToString() string {
 		emojiStr = emojiToString(*a.Emoji)
 	}
 
-	return "Direction: " + directionStr + ", Emoji: " + emojiStr
+	soundStr := "No data"
+	if a.Sound != nil {
+		soundStr = soundToString(*a.Sound)
+	}
+
+	return "Direction: " + directionStr + ", Emoji: " + emojiStr + ", Sound: " + soundStr
 }

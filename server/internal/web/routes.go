@@ -42,6 +42,7 @@ func Register(router fiber.Router) {
 
 	router.Post("/direction", postDirection)
 	router.Post("/emoji", postEmoji)
+	router.Post("/sound", postSound)
 
 	router.Get("/data", getData)
 }
