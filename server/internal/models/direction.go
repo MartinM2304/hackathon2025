@@ -20,17 +20,16 @@ const (
 	RotateRight
 )
 
-func (d Direction) toString() string {
-	switch d.Id {
-	case Up:
+func directionToString(direction byte) string {
+	switch direction {
+	case 0:
 		return "Up"
-	case Down:
+	case 1:
 		return "Down"
-	case RotateLeft:
+	case 2:
 		return "RotateLeft"
-	case RotateRight:
+	case 3:
 		return "RotateRight"
-	default:
-		return "Unknown"
 	}
+	return ""
 }
