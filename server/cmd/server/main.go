@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/MartinM2304/hackathon2025/internal/database"
 	"github.com/MartinM2304/hackathon2025/internal/services"
 	"github.com/MartinM2304/hackathon2025/internal/web"
 	"github.com/gofiber/fiber/v2"
@@ -87,6 +88,12 @@ func main() {
 			panic(fmt.Sprintf("http server error: %s", err.Error()))
 		}
 	}()
+
+	err := database.InitDb()
+	if err != nil {
+		panic(fmt.Sprintf("db starting error: %s", err.Error()))
+	}
+	defer database.CloseDb()
 
 	ticker := time.NewTicker(5 * time.Second)
 	go func() {
