@@ -7,7 +7,7 @@ import { VideoPlayer } from './VidePlayer';
 function App() {
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-900 text-white">
-      <VideoPlayer src='http://robot.g8row.xyz/hls/robot.m3u8' />
+      <VideoPlayer src='https://robot.g8row.xyz/hls/robot.m3u8' />
     
       <div className="w-full md:w-96 p-8 bg-gray-800 h-full">
         {/* Chat Section */}
