@@ -1,44 +1,38 @@
-import { io, Socket } from 'socket.io-client';
-
 export class SocketService {
-  private socket: Socket | null = null;
-  private onLogReceived: (log: string) => void;
-
-  constructor(serverUrl: string, onLogReceived: (log: string) => void) {
-    this.onLogReceived = onLogReceived;
-    this.connect(serverUrl);
-  }
-
-  private connect(serverUrl: string) {
-    //this.socket = io(serverUrl);
-    this.socket = io(serverUrl, {
-        transports: ["websocket"], // Force WebSocket (avoiding HTTP polling)
-        withCredentials: false, // Disable CORS credentials mode
-        timeout: 20000,
-      });
-
-    this.socket.on('connect', () => {
-      console.log('Socket.IO connected');
-    });
-
-    this.socket.on('log', (log: string) => {
-        console.log("majka ti da eba")
+    private socket: WebSocket | null = null;
+    private onLogReceived: (log: string) => void;
+  
+    constructor(serverUrl: string, onLogReceived: (log: string) => void) {
+      this.onLogReceived = onLogReceived;
+      this.connect(serverUrl);
+    }
+  
+    private connect(serverUrl: string) {
+      this.socket = new WebSocket(serverUrl);
+  
+      this.socket.onopen = () => {
+        console.log('WebSocket connected');
+      };
+  
+      this.socket.onmessage = (event) => {
+        const log = event.data as string;
+        console.log('WebSocket message received:', log);
         this.onLogReceived(log);
-    });
-
-    this.socket.on('disconnect', () => {
-      console.log('Socket.IO disconnected');
-    });
-
-    this.socket.on('connect_error', (err) => {
-      console.error('Socket.IO connection error:', err);
-    });
-  }
-
-  public disconnect() {
-    if (this.socket) {
-      this.socket.disconnect();
-      this.socket = null;
+      };
+  
+      this.socket.onclose = () => {
+        console.log('WebSocket disconnected');
+      };
+  
+      this.socket.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+    }
+  
+    public disconnect() {
+      if (this.socket) {
+        this.socket.close();
+        this.socket = null;
+      }
     }
   }
-}

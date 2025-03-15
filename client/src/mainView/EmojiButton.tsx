@@ -20,7 +20,8 @@ const EmojiButton: React.FC<EmojiButtonProps> = ({
 
   const handleEmojiClick = async (emoji: number) => {
     try {
-      const response = await fetch("/api/emoji", {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await fetch(`${apiUrl}/api/emoji`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

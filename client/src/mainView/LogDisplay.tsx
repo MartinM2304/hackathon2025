@@ -1,23 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { SocketService } from '../ServerConnection/ServerConnection.ts';
 
 interface LogDisplayProps {
-  socketUrl: string; // URL of your Socket.IO server
+  socketUrl: string;
 }
 
 const LogDisplay: React.FC<LogDisplayProps> = ({ socketUrl }) => {
   const [logs, setLogs] = useState<string[]>([]);
-  let socketService: SocketService | null = null;
 
   useEffect(() => {
-    socketService = new SocketService(socketUrl, (log) => {
+    const socket = new WebSocket(socketUrl);
+
+    socket.onopen = () => {
+      console.log('WebSocket connected');
+    };
+
+    socket.onmessage = (event) => {
+      const log = event.data as string;
+      console.log('WebSocket message received:', log);
       setLogs((prevLogs) => [...prevLogs, log]);
-    });
+    };
+
+    socket.onclose = () => {
+      console.log('WebSocket disconnected');
+    };
+
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
 
     return () => {
-      if (socketService) {
-        socketService.disconnect();
-      }
+      socket.close();
     };
   }, [socketUrl]);
 
