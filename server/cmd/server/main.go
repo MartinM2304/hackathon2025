@@ -4,7 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"log/slog"
+	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 	"time"
 
@@ -48,7 +51,13 @@ func main() {
 	done := make(chan bool, 1)
 
 	go func() {
-		err := app.Listen(":3000")
+		port, err := strconv.Atoi(os.Getenv("PORT"))
+		if err != nil {
+			slog.Warn("Falling back to port 3000")
+			port = 3000
+		}
+
+		err = app.Listen(fmt.Sprintf(":%d", port))
 		if err != nil {
 			panic(fmt.Sprintf("http server error: %s", err.Error()))
 		}
@@ -61,10 +70,7 @@ func main() {
 			case <-done:
 				return
 			case <-ticker.C:
-				err := services.Aggregate()
-				if err != nil {
-					fmt.Println("ERRRRRRRROOOOOOORRRRRR")
-				}
+				services.Aggregate()
 			}
 		}
 	}()
