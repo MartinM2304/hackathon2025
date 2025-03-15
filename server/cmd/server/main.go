@@ -1,120 +1,128 @@
 package main
 
 import (
-        "context"
-        "fmt"
-        "github.com/gofiber/contrib/socketio"
-        "github.com/gofiber/contrib/websocket"
-        "github.com/gofiber/fiber/v2"
-        "github.com/gofiber/fiber/v2/middleware/cors"
-        "github.com/gofiber/fiber/v2/middleware/logger"
-        "log"
-        "log/slog"
-        "os"
-        "os/signal"
-        "strconv"
-        "syscall"
-        "time"
+    "context"
+    "fmt"
+    "github.com/gofiber/contrib/socketio"
+    "github.com/gofiber/contrib/websocket"
+    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v2/middleware/cors"
+    "github.com/gofiber/fiber/v2/middleware/logger"
+    "log"
+    "log/slog"
+    "os"
+    "os/signal"
+    "strconv"
+    "syscall"
+    "time"
 
-        "github.com/MartinM2304/hackathon2025/internal/services"
-        "github.com/MartinM2304/hackathon2025/internal/web"
+    "github.com/MartinM2304/hackathon2025/internal/services"
+    "github.com/MartinM2304/hackathon2025/internal/web"
 )
 
 func gracefulShutdown(app *fiber.App, done chan bool) {
-        ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-        defer stop()
+    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+    defer stop()
 
-        <-ctx.Done()
+    <-ctx.Done()
 
-        log.Println("shutting down gracefully, press Ctrl+C again to force")
+    log.Println("shutting down gracefully, press Ctrl+C again to force")
 
-        ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-        defer cancel()
-        if err := app.ShutdownWithContext(ctx); err != nil {
-                log.Printf("Server forced to shutdown with error: %v", err)
-        }
+    ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+    defer cancel()
+    if err := app.ShutdownWithContext(ctx); err != nil {
+        log.Printf("Server forced to shutdown with error: %v", err)
+    }
 
-        log.Println("Server exiting")
+    log.Println("Server exiting")
 
-        done <- true
+    done <- true
 }
 
 func main() {
-        app := fiber.New()
+    app := fiber.New()
 
-        app.Use(logger.New(logger.Config{
-                Format:     "${pid} ${time} ${status} - ${method} ${path}\n",
-                TimeFormat: "02-01-2006",
-                TimeZone:   "Europe/Sofia",
-        }))
+    // Apply CORS middleware to all routes
+    app.Use(cors.New(cors.Config{
+        AllowOrigins:     "http://localhost:5174/", // Allow requests from your frontend
+        AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS", // Allow all common methods
+        AllowHeaders:     "Origin, Content-Type, Accept, Authorization", // Allow common headers
+        AllowCredentials: true, // Allow credentials (e.g., cookies)
+    }))
 
-        // Apply CORS middleware to all routes
-        app.Use(cors.New(cors.Config{
-                AllowOrigins:     "*", // Replace with your React app's origin
-                AllowMethods:     "POST, GET, OPTIONS", // Add GET if you use GET requests
-                AllowHeaders:     "Origin, Content-Type, Accept",
-        }))
+    app.Use(logger.New(logger.Config{
+        Format:     "${pid} ${time} ${status} - ${method} ${path}\n",
+        TimeFormat: "02-01-2006",
+        TimeZone:   "Europe/Sofia",
+    }))
 
-        socketio.On(socketio.EventConnect, func(ep *socketio.EventPayload) {
-                log.Printf("Connection event 1 - UUID: %s\n", ep.Kws.GetUUID())
-        })
+    // WebSocket and Socket.IO setup
+    socketio.On(socketio.EventConnect, func(ep *socketio.EventPayload) {
+        log.Printf("Connection event 1 - UUID: %s\n", ep.Kws.GetUUID())
+    })
 
-        socketio.On(socketio.EventDisconnect, func(ep *socketio.EventPayload) {
-                log.Printf("Disconnection event - UUID: %s\n", ep.Kws.GetUUID())
-        })
+    socketio.On(socketio.EventDisconnect, func(ep *socketio.EventPayload) {
+        log.Printf("Disconnection event - UUID: %s\n", ep.Kws.GetUUID())
+    })
 
-        router := app.Group("/api")
-        web.Register(router)
+    router := app.Group("/api")
+    web.Register(router)
 
-        wsRouter := app.Group("/socket.io")
-        wsRouter.Use(func(c *fiber.Ctx) error {
-                if websocket.IsWebSocketUpgrade(c) {
-                        c.Locals("allowed", true)
-                        return c.Next()
-                }
-                return fiber.ErrUpgradeRequired
-        })
+    wsRouter := app.Group("/socket.io")
+    wsRouter.Use(func(c *fiber.Ctx) error {
+        if websocket.IsWebSocketUpgrade(c) {
+            c.Locals("allowed", true)
+            return c.Next()
+        }
+        return fiber.ErrUpgradeRequired
+    })
 
-        wsRouter.Get("/", socketio.New(func(kws *socketio.Websocket) {}))
+    wsRouter.Get("/", socketio.New(func(kws *socketio.Websocket) {}))
 
-        // Your /direction endpoint
-        app.Post("/direction", func(c *fiber.Ctx) error {
-                // Your /direction endpoint logic here
-                log.Println("direction endpoint called")
-                return c.SendString("Direction endpoint called");
-        })
+    // Handle OPTIONS requests for /direction
+    app.Options("/direction", func(c *fiber.Ctx) error {
+        // Respond to preflight requests
+        return c.SendStatus(fiber.StatusNoContent)
+    })
 
-        done := make(chan bool, 1)
+    // Your /direction endpoint
+	app.Post("/direction", func(c *fiber.Ctx) error {
+		// Your /direction endpoint logic here
+		log.Println("direction endpoint called")
+		return c.SendString("Direction endpoint called")
+	})
 
-        go func() {
-                port, err := strconv.Atoi(os.Getenv("PORT"))
-                if err != nil {
-                        slog.Warn("Falling back to port 3000")
-                        port = 3000
-                }
+    done := make(chan bool, 1)
 
-                err = app.Listen(fmt.Sprintf(":%d", port))
-                if err != nil {
-                        panic(fmt.Sprintf("http server error: %s", err.Error()))
-                }
-        }()
+    go func() {
+        port, err := strconv.Atoi(os.Getenv("PORT"))
+        if err != nil {
+            slog.Warn("Falling back to port 3000")
+            port = 3000
+        }
 
-        ticker := time.NewTicker(5 * time.Second)
-        go func() {
-                for {
-                        select {
-                        case <-done:
-                                return
-                        case <-ticker.C:
-                                services.Aggregate()
-                        case m := <-services.NotificationChannel:
-                                socketio.Broadcast([]byte(m), socketio.TextMessage)
-                        }
-                }
-        }()
+        err = app.Listen(fmt.Sprintf(":%d", port))
+        if err != nil {
+            panic(fmt.Sprintf("http server error: %s", err.Error()))
+        }
+    }()
 
-        go gracefulShutdown(app, done)
+    ticker := time.NewTicker(5 * time.Second)
+    go func() {
+        for {
+            select {
+            case <-done:
+                return
+            case <-ticker.C:
+                services.Aggregate()
+            case m := <-services.NotificationChannel:
+                socketio.Broadcast([]byte(m), socketio.TextMessage)
+            }
+        }
+    }()
 
-        <-done
-        log.Println("Graceful shutdown complete.")
+    go gracefulShutdown(app, done)
+
+    <-done
+    log.Println("Graceful shutdown complete.")
 }

@@ -7,7 +7,7 @@ import { VideoPlayer } from './VidePlayer';
 function App() {
   return (
     <div className="flex h-screen bg-gray-900 text-white">
-      <VideoPlayer src='http://robot.g8row.xyz/hls/robot.m3u8' />
+      <VideoPlayer src='https://robot.g8row.xyz/hls/robot.m3u8' />
     
       <div className="w-96 bg-gray-800 p-4">
         {/* Chat Section */}
@@ -20,8 +20,8 @@ function App() {
             </div>
           </div>
         </div> */}
-        {/* Log Display */}
-          <LogDisplay socketUrl="ws://localhost:3000/socket.io/"/>
+        {/* Log Display
+          <LogDisplay socketUrl="https://server.g8row.xyz/socket.io/"/> */}
         {/* Actions Section */}
         <div className="space-y-4">
           <div>
