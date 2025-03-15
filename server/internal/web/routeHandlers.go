@@ -17,15 +17,21 @@ func postDirection(c *fiber.Ctx) error {
 
 	services.RegisterDirectionVote(direction.Direction)
 
-	return c.Status(200).JSON(fiber.Map{
-		"message":   "Direction received successfully",
-		"direction": direction,
-	})
+	c.Status(200)
+	return nil
 }
 
-func getDirections(c *fiber.Ctx) error {
-	directions := services.GetDirections()
-	return c.JSON(directions)
+func postEmoji(c *fiber.Ctx) error {
+	emoji := new(models.EmojiJson)
+
+	if err := c.BodyParser(emoji); err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+
+	services.RegisterEmojiVote(emoji.Emoji)
+
+	c.Status(200)
+	return nil
 }
 
 func getData(c *fiber.Ctx) error {

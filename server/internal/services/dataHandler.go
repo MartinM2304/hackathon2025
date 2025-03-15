@@ -13,8 +13,11 @@ func RegisterDirectionVote(direction models.Direction) {
 	directions = append(directions, direction)
 }
 
-func GetDirections() []models.Direction {
-	return directions
+func RegisterEmojiVote(emoji models.Emoji) {
+	emojisMutex.Lock()
+	defer emojisMutex.Unlock()
+
+	emojis = append(emojis, emoji)
 }
 
 func GetAggregatedDirection() (error, models.Direction) {
