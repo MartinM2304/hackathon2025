@@ -40,7 +40,7 @@ func Register(router fiber.Router) {
 		return c.SendString("Hello, Api!")
 	})
 
-	router.Post("/direction", postDirection)
+	router.Get("/direction", postDirection)
 	router.Post("/emoji", postEmoji)
 
 	router.Get("/data", getData)
