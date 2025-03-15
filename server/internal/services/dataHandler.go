@@ -1,8 +1,6 @@
 package services
 
 import (
-	"errors"
-
 	"github.com/MartinM2304/hackathon2025/internal/models"
 )
 
@@ -20,7 +18,7 @@ func RegisterEmojiVote(emoji models.Emoji) {
 	emojis = append(emojis, emoji)
 }
 
-func GetAggregatedData() (error, models.AggregatedData) {
+func GetAggregatedData() models.AggregatedData {
 	aggregatedData := models.AggregatedData{}
 
 	if !aggregatedDirections.IsEmpty() {
@@ -43,11 +41,7 @@ func GetAggregatedData() (error, models.AggregatedData) {
 		aggregatedData.Emoji = nil
 	}
 
-	if aggregatedData.Direction == nil && aggregatedData.Emoji == nil {
-		return errors.New("No data available"), aggregatedData
-	}
-
 	sendNotification(aggregatedData)
 
-	return nil, aggregatedData
+	return aggregatedData
 }

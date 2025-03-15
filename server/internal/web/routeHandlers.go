@@ -40,10 +40,7 @@ func postEmoji(c *fiber.Ctx) error {
 }
 
 func getData(c *fiber.Ctx) error {
-	err, data := services.GetAggregatedData()
-	if err != nil {
-		return c.Status(404).SendString(err.Error())
-	}
+	data := services.GetAggregatedData()
 
 	c.Status(200).JSON(data)
 	return nil
