@@ -4,6 +4,7 @@ import { SadEmoji } from "@/svg/SadEmoji";
 import { WowEmoji } from "@/svg/WowEmoji";
 import { useState } from "react";
 import StyledButton from "./StyledButton";
+import { SERVER_URL } from "@/config";
 
 const EMOJIS = {
   SMILE: 0,
@@ -21,8 +22,7 @@ export default function EmojiButtons() {
     setEnabled(false);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL;
-      const response = await fetch(`${apiUrl}/api/emoji`, {
+      const response = await fetch(`${SERVER_URL}/api/emoji`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

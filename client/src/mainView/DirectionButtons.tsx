@@ -4,6 +4,7 @@ import LeftArrow from "@/svg/LeftArrow";
 import UpArrow from "@/svg/UpArrow";
 import { useState } from "react";
 import StyledButton from "./StyledButton";
+import { SERVER_URL } from "@/config";
 
 const DIRECTIONS = {
   UP: 0,
@@ -22,18 +23,13 @@ export default function DirectionButtons() {
       setEnabled(false);
       
       try {
-        const apiUrl = import.meta.env.VITE_API_URL;
-        const response = await fetch(`${apiUrl}/api/direction`, {
+        await fetch(`${SERVER_URL}/api/direction`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ direction }),
         });
-  
-        if (!response.ok) {
-          throw new Error("Failed to send direction");
-        }
   
         console.log("Direction sent successfully");
       } catch (error) {
