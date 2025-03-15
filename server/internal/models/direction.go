@@ -1,25 +1,35 @@
 package models
 
-type Direction byte
+type Direction struct {
+	Id     byte
+	IpAddr string
+}
+
+func (e *Direction) DbData() DbData {
+	return DbData{
+		DataType: "direction",
+		Value:    int(e.Id),
+		IpAddr:   e.IpAddr,
+	}
+}
 
 const (
-	Up Direction = iota
+	Up byte = iota
 	Down
 	RotateLeft
 	RotateRight
 )
 
-func (d Direction) toString() string {
-	switch d {
-	case Up:
+func directionToString(direction byte) string {
+	switch direction {
+	case 0:
 		return "Up"
-	case Down:
+	case 1:
 		return "Down"
-	case RotateLeft:
+	case 2:
 		return "RotateLeft"
-	case RotateRight:
+	case 3:
 		return "RotateRight"
-	default:
-		return "Unknown"
 	}
+	return ""
 }

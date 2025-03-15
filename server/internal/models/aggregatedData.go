@@ -1,19 +1,19 @@
 package models
 
 type AggregatedData struct {
-	Direction *Direction `json:"direction,omitempty"`
-	Emoji     *Emoji     `json:"emoji,omitempty"`
+	Direction *byte `json:"direction"`
+	Emoji     *byte `json:"emoji"`
 }
 
 func (a AggregatedData) ToString() string {
-	directionStr := "nil"
+	directionStr := "No data"
 	if a.Direction != nil {
-		directionStr = a.Direction.toString()
+		directionStr = directionToString(*a.Direction)
 	}
 
-	emojiStr := "nil"
+	emojiStr := "No data"
 	if a.Emoji != nil {
-		emojiStr = a.Emoji.toString()
+		emojiStr = emojiToString(*a.Emoji)
 	}
 
 	return "Direction: " + directionStr + ", Emoji: " + emojiStr
