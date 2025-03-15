@@ -20,7 +20,8 @@ const DirectionButton: React.FC<DirectionButtonProps> = ({
 
   const handleDirectionClick = async (direction: number) => {
     try {
-      const response = await fetch("http://localhost:3000/api/direction", {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await fetch("${apiUrl}/api/direction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
