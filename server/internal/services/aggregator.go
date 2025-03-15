@@ -16,8 +16,8 @@ var (
 	aggregatedDirectionMutex sync.Mutex
 )
 
-func Aggregate() error {
-	directionsCounter := []int{0, 0, 0, 0}
+func Aggregate() {
+	directionsCounter := [4]int{0, 0, 0, 0}
 	for _, direction := range directions {
 		directionsCounter[direction] += 1
 	}
@@ -36,12 +36,10 @@ func Aggregate() error {
 	directionsMutex.Unlock()
 
 	if maxCount == 0 {
-		return nil
+		return
 	}
 
 	aggregatedDirectionMutex.Lock()
 	aggregatedDirections.Enqueue(maxIdx)
 	aggregatedDirectionMutex.Unlock()
-
-	return nil
 }
