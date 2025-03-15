@@ -1,5 +1,6 @@
 import DirectionButtons from './mainView/DirectionButtons';
 import EmojiButtons from './mainView/EmojiButtons';
+import LogDisplay from './mainView/LogDisplay';
 import SoundList from './mainView/SoundList'
 import { VideoPlayer } from './VidePlayer';
 
@@ -19,7 +20,8 @@ function App() {
             </div>
           </div>
         </div> */}
-
+        {/* Log Display */}
+          <LogDisplay socketUrl="http://localhost:3000" />
         {/* Actions Section */}
         <div className="flex flex-col gap-6 w-full">
             <DirectionButtons />
