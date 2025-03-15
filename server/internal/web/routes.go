@@ -6,7 +6,7 @@ import (
 )
 
 func Register(router fiber.Router) {
-	router.Use(cors.New(cors.Config{AllowOrigins: "*"}))
+	router.Use(cors.New())
 
 	router.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, Api!")

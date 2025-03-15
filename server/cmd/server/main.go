@@ -69,7 +69,7 @@ func main() {
 		}
 		return fiber.ErrUpgradeRequired
 	})
-	wsRouter.Use(cors.New(cors.Config{AllowOrigins: "*"}))
+	wsRouter.Use(cors.New())
 
 	wsRouter.Get("/", socketio.New(func(kws *socketio.Websocket) {}))
 
