@@ -58,7 +58,7 @@ func main() {
 	router := app.Group("/api")
 	web.Register(router)
 
-	wsRouter := app.Group("/ws")
+	wsRouter := app.Group("/socket.io")
 	wsRouter.Use(func(c *fiber.Ctx) error {
 		// IsWebSocketUpgrade returns true if the client
 		// requested upgrade to the WebSocket protocol.
