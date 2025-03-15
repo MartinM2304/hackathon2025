@@ -29,11 +29,11 @@ func Register(router fiber.Router) {
 	// }))
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",                                                  // Allow all origins (or specify your frontend URL)
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",                        // Allowed methods
-		AllowHeaders:     "Content-Type,Authorization,Accept,X-Requested-With", // Allowed headers
-		ExposeHeaders:    "Authorization",                                      // Exposed headers
-		AllowCredentials: true,                                                 // Allow credentials (if needed)
+		AllowOrigins:  "*",                                                  // Allow all origins (or specify your frontend URL)
+		AllowMethods:  "GET,POST,PUT,DELETE,OPTIONS",                        // Allowed methods
+		AllowHeaders:  "Content-Type,Authorization,Accept,X-Requested-With", // Allowed headers
+		ExposeHeaders: "Authorization",                                      // Exposed headers
+		// AllowCredentials: true,                                                 // Allow credentials (if needed)
 	}))
 
 	router.Get("/", func(c *fiber.Ctx) error {
