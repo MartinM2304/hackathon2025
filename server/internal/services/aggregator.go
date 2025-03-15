@@ -3,6 +3,7 @@ package services
 import (
 	"sync"
 
+	"github.com/MartinM2304/hackathon2025/internal/database"
 	"github.com/MartinM2304/hackathon2025/internal/models"
 )
 
@@ -17,19 +18,19 @@ var (
 )
 
 var (
-	aggregatedDirections     models.Queue[models.Direction]
+	aggregatedDirections     models.Queue[byte]
 	aggregatedDirectionMutex sync.Mutex
 )
 
 var (
-	aggregatedEmojis      models.Queue[models.Emoji]
+	aggregatedEmojis      models.Queue[byte]
 	aggregatedEmojisMutex sync.Mutex
 )
 
 func aggregateDirections() {
 	directionsCounter := [4]int{0, 0, 0, 0}
 	for _, direction := range directions {
-		directionsCounter[direction] += 1
+		directionsCounter[direction.Id] += 1
 	}
 
 	maxIdx := models.Up
@@ -37,13 +38,9 @@ func aggregateDirections() {
 	for i, count := range directionsCounter {
 		if count > maxCount {
 			maxCount = count
-			maxIdx = models.Direction(i)
+			maxIdx = byte(i)
 		}
 	}
-
-	directionsMutex.Lock()
-	directions = []models.Direction{}
-	directionsMutex.Unlock()
 
 	if maxCount == 0 {
 		return
@@ -57,7 +54,7 @@ func aggregateDirections() {
 func aggregateEmojis() {
 	emojisCounter := [4]int{0, 0, 0, 0}
 	for _, emoji := range emojis {
-		emojisCounter[emoji] += 1
+		emojisCounter[emoji.Id] += 1
 	}
 
 	maxIdx := models.Smile
@@ -65,13 +62,9 @@ func aggregateEmojis() {
 	for i, count := range emojisCounter {
 		if count > maxCount {
 			maxCount = count
-			maxIdx = models.Emoji(i)
+			maxIdx = byte(i)
 		}
 	}
-
-	emojisMutex.Lock()
-	emojis = []models.Emoji{}
-	emojisMutex.Unlock()
 
 	if maxCount == 0 {
 		return
@@ -85,4 +78,24 @@ func aggregateEmojis() {
 func Aggregate() {
 	aggregateDirections()
 	aggregateEmojis()
+
+	items := []models.DBser{}
+
+	for _, emoji := range emojis {
+		items = append(items, emoji)
+	}
+
+	for _, direction := range directions {
+		items = append(items, &direction)
+	}
+
+	database.BatchInsertItems(items)
+
+	directionsMutex.Lock()
+	directions = []models.Direction{}
+	directionsMutex.Unlock()
+
+	emojisMutex.Lock()
+	emojis = []models.Emoji{}
+	emojisMutex.Unlock()
 }

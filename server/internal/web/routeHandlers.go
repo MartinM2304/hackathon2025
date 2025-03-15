@@ -13,7 +13,12 @@ func postDirection(c *fiber.Ctx) error {
 		return c.Status(400).SendString(err.Error())
 	}
 
-	services.RegisterDirectionVote(direction.Direction)
+	services.RegisterDirectionVote(
+		models.Direction{
+			Id:     direction.Direction,
+			IpAddr: string(c.Request().Host()),
+		},
+	)
 
 	c.Status(200)
 	return nil
@@ -26,7 +31,9 @@ func postEmoji(c *fiber.Ctx) error {
 		return c.Status(400).SendString(err.Error())
 	}
 
-	services.RegisterEmojiVote(emoji.Emoji)
+	services.RegisterEmojiVote(
+		models.Emoji{Id: emoji.Emoji, IpAddr: c.Context().Response.RemoteAddr().String()},
+	)
 
 	c.Status(200)
 	return nil

@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+
 	"github.com/MartinM2304/hackathon2025/internal/models"
 )
 
