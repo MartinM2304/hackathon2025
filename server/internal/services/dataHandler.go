@@ -46,5 +46,7 @@ func GetAggregatedData() (error, models.AggregatedData) {
 		return errors.New("No data available"), aggregatedData
 	}
 
+	sendNotification(aggregatedData)
+
 	return nil, aggregatedData
 }
