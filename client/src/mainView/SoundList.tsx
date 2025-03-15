@@ -48,7 +48,7 @@ interface SoundButtonProps {
       return (
         <div style={{ display: "flex", flexDirection: "column" }}>
           {Object.values(SOUNDS).map((sound) => (
-            <Button key={sound} onClick={() => handleSoundClick(sound)} className="p-2">
+            <Button key={sound} onClick={() => handleSoundClick(sound)} className="my-1">
               {Object.keys(SOUNDS).find((key) => SOUNDS[key as keyof typeof SOUNDS] === sound)}
             </Button>
           ))}
