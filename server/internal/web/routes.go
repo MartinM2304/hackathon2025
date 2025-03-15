@@ -14,8 +14,6 @@ func Register(router fiber.Router) {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
 			// Allow these methods.
 			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-			// Allow these headers.
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
 			w.Header().
 				Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept, X-Requested-With")
