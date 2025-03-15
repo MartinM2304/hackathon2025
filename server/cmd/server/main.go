@@ -47,7 +47,19 @@ func main() {
 		TimeZone:   "Europe/Sofia",
 	}))
 
-	app.Use(func(c *fiber.Ctx) error {
+	socketio.On(socketio.EventConnect, func(ep *socketio.EventPayload) {
+		log.Printf("Connection event 1 - UUID: %s\n", ep.Kws.GetUUID())
+	})
+
+	socketio.On(socketio.EventDisconnect, func(ep *socketio.EventPayload) {
+		log.Printf("Disconnection event - UUID: %s\n", ep.Kws.GetUUID())
+	})
+
+	router := app.Group("/api")
+	web.Register(router)
+
+	wsRouter := app.Group("/ws")
+	wsRouter.Use(func(c *fiber.Ctx) error {
 		// IsWebSocketUpgrade returns true if the client
 		// requested upgrade to the WebSocket protocol.
 		if websocket.IsWebSocketUpgrade(c) {
@@ -57,18 +69,7 @@ func main() {
 		return fiber.ErrUpgradeRequired
 	})
 
-	socketio.On(socketio.EventConnect, func(ep *socketio.EventPayload) {
-		log.Printf("Connection event 1 - UUID: %s\n", ep.Kws.GetUUID())
-	})
-
-	socketio.On(socketio.EventDisconnect, func(ep *socketio.EventPayload) {
-		log.Printf("Disconnection event - UUID: %s\n", ep.Kws.GetUUID())
-	})
-
-	app.Get("/ws/", socketio.New(func(kws *socketio.Websocket) {}))
-
-	router := app.Group("/api")
-	web.Register(router)
+	wsRouter.Get("/", socketio.New(func(kws *socketio.Websocket) {}))
 
 	done := make(chan bool, 1)
 
@@ -93,6 +94,8 @@ func main() {
 				return
 			case <-ticker.C:
 				services.Aggregate()
+			case m := <-services.NotificationChannel:
+				socketio.Broadcast([]byte(m), socketio.TextMessage)
 			}
 		}
 	}()

@@ -5,6 +5,8 @@ import (
 	"github.com/MartinM2304/hackathon2025/internal/models"
 )
 
+var NotificationChannel = make(chan string)
+
 func RegisterDirectionVote(direction models.Direction) {
 	directionsMutex.Lock()
 	defer directionsMutex.Unlock()
@@ -45,6 +47,8 @@ func GetAggregatedData() (error, models.AggregatedData) {
 	if aggregatedData.Direction == nil && aggregatedData.Emoji == nil {
 		return errors.New("No data available"), aggregatedData
 	}
+
+	NotificationChannel <- aggregatedData.ToString()
 
 	return nil, aggregatedData
 }
