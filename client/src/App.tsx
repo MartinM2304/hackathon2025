@@ -1,3 +1,4 @@
+import { SERVER_URL } from './config';
 import DirectionButtons from './mainView/DirectionButtons';
 import EmojiButtons from './mainView/EmojiButtons';
 import LogDisplay from './mainView/LogDisplay';
@@ -11,7 +12,7 @@ function App() {
     
       <div className="flex flex-col w-full gap-6 md:w-96 p-8 bg-gray-800 h-full p-3">
         {/* Log Display */}
-          <LogDisplay socketUrl={"https://server.g8row.xyz/socket.io"} />
+          <LogDisplay socketUrl={`${SERVER_URL}/socket.io`} />
         {/* Actions Section */}
 
           <DirectionButtons />

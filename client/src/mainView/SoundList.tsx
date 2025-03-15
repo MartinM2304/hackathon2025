@@ -1,5 +1,4 @@
-// SoundList.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SERVER_URL } from "@/config";
 
@@ -9,22 +8,27 @@ export const SOUNDS = {
   OPERA: 2,
   DRUM_BEAT: 3,
 };
-interface SoundButtonProps {
-    sound: number;
-  }
+
+const SOUND_LABELS: Record<number, string> = {
+  [SOUNDS.BARK]: "Dog Bark",
+  [SOUNDS.MEOW_MEOW]: "Cat Meow",
+  [SOUNDS.OPERA]: "Opera Singing",
+  [SOUNDS.DRUM_BEAT]: "Drum Beat",
+};
+
   
-  interface SoundListProps {
-    style?: React.CSSProperties;
-  }
-  
-  const SoundList: React.FC<SoundListProps> = () => {
+const SoundList = () => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isEnabled, setEnabled] = useState(true);
   
     const toggleExpansion = () => {
       setIsExpanded(!isExpanded);
     };
   
     const handleSoundClick = async (sound: number) => {
+      if(!isEnabled) return;
+      setEnabled(false);
+
       try {
         const response = await fetch(`${SERVER_URL}/api/sound`, {
           method: "POST",
@@ -42,14 +46,23 @@ interface SoundButtonProps {
       } catch (error) {
         console.error("Error sending sound:", error);
       }
+
+      setTimeout(() => {
+        setEnabled(true);
+      }, 5000);
     };
 
     const renderSoundButtons = () => {
       return (
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div className="flex flex-col">
           {Object.values(SOUNDS).map((sound) => (
-            <Button key={sound} onClick={() => handleSoundClick(sound)} className="my-1">
-              {Object.keys(SOUNDS).find((key) => SOUNDS[key as keyof typeof SOUNDS] === sound)}
+            <Button
+              disabled={!isEnabled}
+              key={sound}
+              onClick={() => handleSoundClick(sound)}
+              className="bg-gray-700 my-1 ease-in-out cursor-pointer hover:bg-gray-900 hover:scale-110 active:scale-90"
+            >
+              {SOUND_LABELS[sound] || "Unknown Sound"}
             </Button>
           ))}
         </div>
@@ -58,7 +71,7 @@ interface SoundButtonProps {
   
     return (
       <div>
-        <Button onClick={toggleExpansion} style={{ width: "100%", textAlign: "left" }}>
+        <Button onClick={toggleExpansion} className="cursor-pointer" style={{ width: "100%", textAlign: "left" }}>
           Sound
         </Button>
         {isExpanded && renderSoundButtons()}
