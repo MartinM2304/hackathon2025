@@ -1,7 +1,5 @@
-import { io, Socket } from 'socket.io-client';
-
 export class SocketService {
-  private socket: Socket | null = null;
+  private socket: WebSocket | null = null;
   private onLogReceived: (log: string) => void;
 
   constructor(serverUrl: string, onLogReceived: (log: string) => void) {
@@ -10,28 +8,30 @@ export class SocketService {
   }
 
   private connect(serverUrl: string) {
-    this.socket = io(serverUrl);
+    this.socket = new WebSocket(serverUrl);
 
-    this.socket.on('connect', () => {
-      console.log('Socket.IO connected');
-    });
+    this.socket.onopen = () => {
+      console.log('WebSocket connected');
+    };
 
-    this.socket.on('log', (log: string) => {
+    this.socket.onmessage = (event) => {
+      const log = event.data as string;
+      console.log('WebSocket message received:', log);
       this.onLogReceived(log);
-    });
+    };
 
-    this.socket.on('disconnect', () => {
-      console.log('Socket.IO disconnected');
-    });
+    this.socket.onclose = () => {
+      console.log('WebSocket disconnected');
+    };
 
-    this.socket.on('connect_error', (err) => {
-      console.error('Socket.IO connection error:', err);
-    });
+    this.socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
   }
 
   public disconnect() {
     if (this.socket) {
-      this.socket.disconnect();
+      this.socket.close();
       this.socket = null;
     }
   }
