@@ -213,10 +213,10 @@ func DumpVotesTable() ([]models.Vote, error) {
 		// Convert timestamp string to time.Time if not NULL
 		if timestamp.Valid {
 			// SQLite datetime format can vary, adjust the parsing format if needed
-			t, err := time.Parse("2006-01-02 15:04:05", timestamp.String)
+			t, err := time.Parse(time.RFC3339Nano, timestamp.String)
 			if err != nil {
 				// Try alternative format if the first one fails
-				t, err = time.Parse("2006-01-02T15:04:05Z", timestamp.String)
+				t, err = time.Parse(time.RFC3339Nano, timestamp.String)
 				if err != nil {
 					return nil, fmt.Errorf(
 						"failed to parse timestamp '%s': %w",
