@@ -25,10 +25,10 @@ const chartConfig = {
 
 // Mapping IDs to emoji names
 const EMOJI_LABELS: Record<number, string> = {
-  0: "Happy",
+  0: "Smile",
   1: "Sad",
-  2: "Wow",
-  3: "Angry",
+  2: "Angry",
+  3: "Wow",
 };
 
 interface EmojiBarChartProps {

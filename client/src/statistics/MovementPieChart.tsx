@@ -17,8 +17,8 @@ const chartConfig = {} satisfies ChartConfig;
 const DIRECTION_LABELS: Record<number, string> = {
   0: "Up",
   1: "Down",
-  2: "Right",
-  3: "Left",
+  2: "Left",
+  3: "Right",
 };
 
 const COLOR_MAP: Record<number, string> = {
