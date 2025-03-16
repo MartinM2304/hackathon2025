@@ -15,7 +15,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useMemo } from "react";
-import { EmojiData } from "./MainStats";
+import { SoundData } from "./MainStats";
 
 const chartConfig = {
   desktop: {
@@ -24,21 +24,21 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 // Mapping IDs to emoji names
-const EMOJI_LABELS: Record<number, string> = {
-  0: "Smile",
-  1: "Sad",
-  2: "Angry",
-  3: "Wow",
+const SOUND_LABELS: Record<number, string> = {
+  0: "Bark",
+  1: "Meow Meow",
+  2: "Hello",
+  3: "Bye",
 };
 
-interface EmojiBarChartProps {
-  data: EmojiData[];
+interface SoundBarChartProps {
+  data: SoundData[];
 }
 
-export function EmojiBarChart({ data }: EmojiBarChartProps) {
+export function SoundsBarChart({ data }: SoundBarChartProps) {
   const chartData = useMemo(() => {
     return data.map((item) => ({
-      value: EMOJI_LABELS[item.Id] || `Emoji ${item.Id}`,
+      value: SOUND_LABELS[item.Id] || `Sound ${item.Id}`,
       freq: item.Count,
     }));
   }, [data]);

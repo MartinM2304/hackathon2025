@@ -1,86 +1,70 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-]
+} from "@/components/ui/chart";
+import { EntropyData } from "./MainStats";
+import { useEffect, useState } from "react";
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "Entropy",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function CollaborationChart() {
-    return (
-      <Card className="bg-slate-950 w-full max-w-3xl border-0">
-        <CardHeader>
-        <CardTitle className="text-white">Temporal Dynamics of Collaborative Control</CardTitle>
+interface CollaborationChartProps {
+  data: EntropyData[];
+}
+
+export function CollaborationChart({ data }: CollaborationChartProps) {
+  const [sortedDataByTurn, setSortedDataByTurn] = useState<EntropyData[]>([]);
+  useEffect(() => {
+    setSortedDataByTurn(data.slice().sort((a, b) => a.turn - b.turn));
+  }, [data]);
+  return (
+    <Card className="bg-slate-950 w-full max-w-3xl border-0">
+      <CardHeader>
+        <CardTitle className="text-white">
+          Temporal Dynamics of Collaborative Control
+        </CardTitle>
         <CardDescription>
           Showing the temporal dynamics of collaborative control in ZafiraBot
         </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
+          <AreaChart data={sortedDataByTurn} margin={{ left: 12, right: 12 }}>
+            <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis
-              dataKey="month"
+              dataKey="turn"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
+            <YAxis />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dot" hideLabel />}
             />
             <Area
-              dataKey="desktop"
-              type="linear"
+              dataKey="entropy"
+              type="monotone"
+              stroke="#8884d8"
               fillOpacity={0.4}
+              fill="#8884d8"
             />
           </AreaChart>
         </ChartContainer>
       </CardContent>
-      </Card>
-    )
-  }
-  
+    </Card>
+  );
+}
