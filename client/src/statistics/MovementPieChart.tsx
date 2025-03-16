@@ -1,37 +1,51 @@
-import { Pie, PieChart, Sector } from "recharts"
-import { PieSectorDataItem } from "recharts/types/polar/Pie"
+import { Pie, PieChart, Sector } from "recharts";
+import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { useState } from "react"
-const chartData = [
-    { name: "Up", value: 275, fill: "#3b82f6" },
-    { name: "Down", value: 300, fill: "#1e40af" },
-    { name: "Right", value: 187, fill: "#2563eb" },
-    { name: "Left", value: 173, fill: "#1d4ed8" },
-  ];
-  
+} from "@/components/ui/chart";
+import { useState, useMemo } from "react";
+import { DirectionData } from "./MainStats";
 
-const chartConfig = {
-} satisfies ChartConfig
+const chartConfig = {} satisfies ChartConfig;
 
-export function MovementPieChart() {
+// Mapping IDs to movement names
+const DIRECTION_LABELS: Record<number, string> = {
+  0: "Up",
+  1: "Down",
+  2: "Right",
+  3: "Left",
+};
+
+const COLOR_MAP: Record<number, string> = {
+  0: "#3b82f6", // Up
+  1: "#1e40af", // Down
+  2: "#2563eb", // Right
+  3: "#1d4ed8", // Left
+};
+
+interface MovementPieChartProps {
+  data: DirectionData[];
+}
+
+export function MovementPieChart({ data }: MovementPieChartProps) {
+  const chartData = useMemo(() => {
+    return data.map((item) => ({
+      name: DIRECTION_LABELS[item.Id] || `Direction ${item.Id}`,
+      value: item.Count,
+      fill: COLOR_MAP[item.Id] || "#8884d8", // Default color if missing
+    }));
+  }, [data]);
 
   const [maxIndex, _setMaxIndex] = useState<number>(() => {
-    const maxValue = Math.max(...chartData.map(data => data.value));
-    return chartData.findIndex(data => data.value === maxValue);
+    const maxValue = Math.max(...chartData.map((d) => d.value));
+    return chartData.findIndex((d) => d.value === maxValue);
   });
-    
+
   const [activeIndex, setActiveIndex] = useState<number>(maxIndex);
 
   const onPieEnter = (_: any, index: number) => setActiveIndex(index);
@@ -50,7 +64,9 @@ export function MovementPieChart() {
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel className="text-lg w-xsm" />}
+              content={
+                <ChartTooltipContent hideLabel className="text-lg w-xsm" />
+              }
             />
             <Pie
               data={chartData}
@@ -72,5 +88,5 @@ export function MovementPieChart() {
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
