@@ -102,11 +102,6 @@ func BatchInsertItems(items []models.DBser) error {
 	return nil
 }
 
-type DbItem struct {
-	Value int
-	Count int
-}
-
 func GetAllItemsForType(dataType string) (error, map[int][4]int) {
 	result := map[int][4]int{}
 	err := db.Ping()

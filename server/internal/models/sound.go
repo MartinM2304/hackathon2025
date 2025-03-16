@@ -1,33 +1,30 @@
 package models
 
-type Sound struct {
-	Id     byte
-	IpAddr string
-}
+type Sound int
 
-func (e *Sound) DbData() DbData {
+func (e Sound) DbData() DbData {
 	return DbData{
 		DataType: "sound",
-		Value:    int(e.Id),
+		Value:    int(e),
 	}
 }
 
 const (
-	Bark byte = iota
+	Bark Sound = iota
 	MeowMeow
 	Opera
 	DrumBeat
 )
 
-func soundToString(sound byte) string {
+func soundToString(sound Sound) string {
 	switch sound {
-	case 0:
+	case Bark:
 		return "Bark"
-	case 1:
+	case MeowMeow:
 		return "Meow Meow"
-	case 2:
+	case Opera:
 		return "Opera"
-	case 3:
+	case DrumBeat:
 		return "Drum beat"
 	}
 	return ""

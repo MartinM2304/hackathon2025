@@ -7,48 +7,39 @@ import (
 )
 
 func postDirection(c *fiber.Ctx) error {
-	direction := new(models.DirectionJson)
+	body := new(models.DirectionJson)
 
-	if err := c.BodyParser(direction); err != nil {
+	if err := c.BodyParser(body); err != nil {
 		return c.Status(400).SendString(err.Error())
 	}
 
-	services.RegisterDirectionVote(
-		models.Direction{
-			Id:     direction.Direction,
-			IpAddr: string(c.Request().Host()),
-		},
-	)
+	services.RegisterDirectionVote(body.Direction)
 
 	c.Status(200)
 	return nil
 }
 
 func postEmoji(c *fiber.Ctx) error {
-	emoji := new(models.EmojiJson)
+	body := new(models.EmojiJson)
 
-	if err := c.BodyParser(emoji); err != nil {
+	if err := c.BodyParser(body); err != nil {
 		return c.Status(400).SendString(err.Error())
 	}
 
-	services.RegisterEmojiVote(
-		models.Emoji{Id: emoji.Emoji, IpAddr: string(c.Request().Host())},
-	)
+	services.RegisterEmojiVote(body.Emoji)
 
 	c.Status(200)
 	return nil
 }
 
 func postSound(c *fiber.Ctx) error {
-	sound := new(models.SoundJson)
+	body := new(models.SoundJson)
 
-	if err := c.BodyParser(sound); err != nil {
+	if err := c.BodyParser(body); err != nil {
 		return c.Status(400).SendString(err.Error())
 	}
 
-	services.RegisterSoundVote(
-		models.Sound{Id: sound.Sound, IpAddr: string(c.Request().Host())},
-	)
+	services.RegisterSoundVote(body.Sound)
 
 	c.Status(200)
 	return nil

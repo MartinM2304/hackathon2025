@@ -1,25 +1,22 @@
 package models
 
-type Emoji struct {
-	Id     byte
-	IpAddr string
-}
+type Emoji int
 
 func (e Emoji) DbData() DbData {
 	return DbData{
 		DataType: "emoji",
-		Value:    int(e.Id),
+		Value:    int(e),
 	}
 }
 
 const (
-	Smile byte = iota
+	Smile Emoji = iota
 	Sad
 	Angry
 	Wow
 )
 
-func emojiToString(emoji byte) string {
+func emojiToString(emoji Emoji) string {
 	switch emoji {
 	case Smile:
 		return "Smile"

@@ -1,6 +1,6 @@
 package models
 
 type AgreggatedEmoji struct {
-	Id    byte
+	Id    Emoji
 	Count int
 }

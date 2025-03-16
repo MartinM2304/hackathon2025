@@ -1,6 +1,6 @@
 package models
 
 type AgreggatedDirection struct {
-	Id    byte
+	Id    Direction
 	Count int
 }

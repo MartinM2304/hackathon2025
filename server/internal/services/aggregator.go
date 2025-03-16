@@ -42,7 +42,7 @@ var (
 func aggregateDirections() {
 	directionsCounter := [4]int{0, 0, 0, 0}
 	for _, direction := range directions {
-		directionsCounter[direction.Id] += 1
+		directionsCounter[direction] += 1
 	}
 
 	maxIdx := models.Up
@@ -50,7 +50,7 @@ func aggregateDirections() {
 	for i, count := range directionsCounter {
 		if count > maxCount {
 			maxCount = count
-			maxIdx = byte(i)
+			maxIdx = models.Direction(i)
 		}
 	}
 
@@ -69,7 +69,7 @@ func aggregateDirections() {
 func aggregateEmojis() {
 	emojisCounter := [4]int{0, 0, 0, 0}
 	for _, emoji := range emojis {
-		emojisCounter[emoji.Id] += 1
+		emojisCounter[emoji] += 1
 	}
 
 	maxIdx := models.Smile
@@ -77,7 +77,7 @@ func aggregateEmojis() {
 	for i, count := range emojisCounter {
 		if count > maxCount {
 			maxCount = count
-			maxIdx = byte(i)
+			maxIdx = models.Emoji(i)
 		}
 	}
 
@@ -96,7 +96,7 @@ func aggregateEmojis() {
 func aggregateSounds() {
 	soundsCounter := [4]int{0, 0, 0, 0}
 	for _, sound := range sounds {
-		soundsCounter[sound.Id] += 1
+		soundsCounter[sound] += 1
 	}
 
 	maxIdx := models.Bark
@@ -104,7 +104,7 @@ func aggregateSounds() {
 	for i, count := range soundsCounter {
 		if count > maxCount {
 			maxCount = count
-			maxIdx = byte(i)
+			maxIdx = models.Sound(i)
 		}
 	}
 
@@ -141,9 +141,11 @@ func Aggregate() {
 		items = append(items, &sound)
 	}
 
-	err := database.BatchInsertItems(items)
-	if err != nil {
-		fmt.Printf("Errror %v\n", err)
+	if len(items) != 0 {
+		err := database.BatchInsertItems(items)
+		if err != nil {
+			fmt.Printf("Errror %v\n", err)
+		}
 	}
 
 	directionsMutex.Lock()

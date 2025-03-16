@@ -1,6 +1,6 @@
 package models
 
 type AgreggatedSound struct {
-	Id    byte
+	Id    Sound
 	Count int
 }
