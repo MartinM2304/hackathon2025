@@ -13,6 +13,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { EntropyData } from "./MainStats";
+import { useEffect, useState } from "react";
 
 const chartConfig = {
   desktop: {
@@ -25,6 +26,10 @@ interface CollaborationChartProps {
 }
 
 export function CollaborationChart({ data }: CollaborationChartProps) {
+  const [sortedDataByTurn, setSortedDataByTurn] = useState<EntropyData[]>([]);
+  useEffect(() => {
+    setSortedDataByTurn(data.slice().sort((a, b) => a.turn - b.turn));
+  }, [data]);
   return (
     <Card className="bg-slate-950 w-full max-w-3xl border-0">
       <CardHeader>
@@ -37,7 +42,7 @@ export function CollaborationChart({ data }: CollaborationChartProps) {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <AreaChart data={data} margin={{ left: 12, right: 12 }}>
+          <AreaChart data={sortedDataByTurn} margin={{ left: 12, right: 12 }}>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis
               dataKey="turn"
