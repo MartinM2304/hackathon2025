@@ -34,7 +34,6 @@ interface StatsData {
 
 export default function MainStats() {
   const [statsData, setStatsData] = useState<StatsData>();
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,6 +46,12 @@ export default function MainStats() {
     };
 
     fetchData();
+
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (!statsData) {
