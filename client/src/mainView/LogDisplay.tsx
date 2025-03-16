@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SocketService } from '../ServerConnection/ServerConnection.ts';
 
 interface LogDisplayProps {
-  socketUrl: string; // URL of your Socket.IO server
+  socketUrl: string;
 }
 
 const LogDisplay: React.FC<LogDisplayProps> = ({ socketUrl }) => {

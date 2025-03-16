@@ -23,7 +23,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-// Mapping IDs to emoji names
 const SOUND_LABELS: Record<number, string> = {
   0: "Bark",
   1: "Meow Meow",
@@ -43,7 +42,7 @@ export function SoundsBarChart({ data }: SoundBarChartProps) {
     }));
   }, [data]);
 
-  const maxValue = Math.max(...chartData.map((d) => d.freq), 10); // Ensure a minimum scale
+  const maxValue = Math.max(...chartData.map((d) => d.freq), 10);
 
   return (
     <Card className="bg-slate-950 w-full max-w-2xl border-0">

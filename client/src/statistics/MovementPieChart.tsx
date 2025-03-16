@@ -13,7 +13,6 @@ import { DirectionData } from "./MainStats";
 
 const chartConfig = {} satisfies ChartConfig;
 
-// Mapping IDs to movement names
 const DIRECTION_LABELS: Record<number, string> = {
   0: "Up",
   1: "Down",
