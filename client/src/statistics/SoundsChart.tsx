@@ -47,7 +47,7 @@ export function SoundsBarChart({ data }: SoundBarChartProps) {
   return (
     <Card className="bg-slate-950 w-full max-w-2xl border-0">
       <CardHeader>
-        <CardTitle className="text-white">Reactions Frequency</CardTitle>
+        <CardTitle className="text-white">Sounds Frequency</CardTitle>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
