@@ -8,11 +8,11 @@ import (
 
 func Register(router fiber.Router) {
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     "https://client.g8row.xyz, http://localhost:3001",    // Allow all origins (or specify your frontend URL)
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",                        // Allowed methods
-		AllowHeaders:     "Content-Type,Authorization,Accept,X-Requested-With", // Allowed headers
-		ExposeHeaders:    "Authorization",                                      // Exposed headers
-		AllowCredentials: true,                                                 // Allow credentials (if needed)
+		AllowOrigins:     "https://client.g8row.xyz, http://localhost:3001",
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders:     "Content-Type,Authorization,Accept,X-Requested-With",
+		ExposeHeaders:    "Authorization",
+		AllowCredentials: true,
 	}))
 
 	router.Get("/", func(c *fiber.Ctx) error {

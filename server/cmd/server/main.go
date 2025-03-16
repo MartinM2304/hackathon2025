@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/gofiber/contrib/socketio"
-	"github.com/gofiber/contrib/websocket"
-	"github.com/gofiber/fiber/v2/middleware/cors"
 	"log"
 	"log/slog"
 	"os"
@@ -13,6 +10,10 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+
+	"github.com/gofiber/contrib/socketio"
+	"github.com/gofiber/contrib/websocket"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 
 	"github.com/MartinM2304/hackathon2025/internal/database"
 	"github.com/MartinM2304/hackathon2025/internal/services"
@@ -62,8 +63,6 @@ func main() {
 
 	wsRouter := app.Group("/socket.io")
 	wsRouter.Use(func(c *fiber.Ctx) error {
-		// IsWebSocketUpgrade returns true if the client
-		// requested upgrade to the WebSocket protocol.
 		if websocket.IsWebSocketUpgrade(c) {
 			c.Locals("allowed", true)
 			return c.Next()

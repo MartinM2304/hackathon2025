@@ -27,7 +27,7 @@ func (q *Queue[T]) Dequeue() T {
 		return element
 	}
 	q.Elements = q.Elements[1:]
-	return element // Slice off the element once it is dequeued.
+	return element
 }
 
 func (q *Queue[T]) GetLength() int {
