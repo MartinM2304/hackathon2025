@@ -51,7 +51,7 @@ export default function MainStats() {
 
   if (!statsData) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center text-white">
+      <div className="h-screen w-screen flex items-center justify-center text-black">
         Loading...
       </div>
     );
@@ -61,7 +61,7 @@ export default function MainStats() {
     <div className="h-screen w-screen bg-slate-900 p-4 flex items-center justify-center overflow-y-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 max-w-6xl w-full">
         <div className="flex justify-center">
-          <CollaborationChart data={statsData.entropy} />
+          {statsData.entropy && <CollaborationChart data={statsData.entropy} />}
         </div>
         <div className="flex justify-center">
           <MovementPieChart data={statsData.direction} />
