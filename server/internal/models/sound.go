@@ -12,8 +12,8 @@ func (e Sound) DbData() DbData {
 const (
 	Bark Sound = iota
 	MeowMeow
-	Opera
-	DrumBeat
+	Hello
+	Bye
 )
 
 func soundToString(sound Sound) string {
@@ -22,10 +22,10 @@ func soundToString(sound Sound) string {
 		return "Bark"
 	case MeowMeow:
 		return "Meow Meow"
-	case Opera:
-		return "Opera"
-	case DrumBeat:
-		return "Drum beat"
+	case Hello:
+		return "Hello"
+	case Bye:
+		return "Bye"
 	}
 	return ""
 }
