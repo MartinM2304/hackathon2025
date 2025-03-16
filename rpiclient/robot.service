@@ -1,0 +1,12 @@
+[Unit]
+Description=Robot Streaming Service
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/usr/bin/ffmpeg -f v4l2 -i /dev/video0   -f alsa -i mono   -input_format mjpeg   -vcodec h264_v4l2m2m   -video_size 1024x768   -preset ultrafast   -tune zerolatency   -acodec aac   -b:a 128k   -ar 44100   -strict experimental   -f flv   rtmp://10.198.60.1/live/robot
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
