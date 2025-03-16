@@ -9,7 +9,6 @@ func (e *Direction) DbData() DbData {
 	return DbData{
 		DataType: "direction",
 		Value:    int(e.Id),
-		IpAddr:   e.IpAddr,
 	}
 }
 
@@ -22,13 +21,13 @@ const (
 
 func directionToString(direction byte) string {
 	switch direction {
-	case 0:
+	case Up:
 		return "Up"
-	case 1:
+	case Down:
 		return "Down"
-	case 2:
+	case RotateLeft:
 		return "RotateLeft"
-	case 3:
+	case RotateRight:
 		return "RotateRight"
 	}
 	return ""

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"log/slog"
+	"time"
 
 	"github.com/MartinM2304/hackathon2025/internal/models"
 
@@ -12,6 +13,8 @@ import (
 )
 
 var db *sql.DB
+
+var iteration int = 0
 
 func InitDb() error {
 	dbConn, err := sql.Open("sqlite", "./data.db")
@@ -38,12 +41,14 @@ func createTableIfNotExist() error {
 	slog.Info("Created the table")
 
 	createTableSQL := `
-	CREATE TABLE IF NOT EXISTS Data (
-		Id INTEGER PRIMARY KEY AUTOINCREMENT,
-		Type TEXT NOT NULL,
-		Value INTEGER,
-		IpAddress TEXT
-	)`
+	DROP TABLE IF EXISTS Votes;
+	CREATE TABLE IF NOT EXISTS Votes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT CHECK (type IN ('direction', 'emoji', 'sound')) NOT NULL,
+    value INTEGER,
+    turn INTEGER,
+    timestamp DATETIME
+	);`
 
 	_, err = db.Exec(createTableSQL)
 	if err != nil {
@@ -57,18 +62,17 @@ func BatchInsertItems(items []models.DBser) error {
 		return nil
 	}
 
-	fmt.Println(db)
-	// err := db.Ping()
-	// if err != nil {
-	// 	return fmt.Errorf("Failed to connect to database: %v", err)
-	// }
+	err := db.Ping()
+	if err != nil {
+		return fmt.Errorf("Failed to connect to database: %v", err)
+	}
 
 	tx, err := db.Begin()
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
 
-	stmt, err := tx.Prepare("INSERT INTO Data (Type, Value, IpAddress) VALUES (?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO Votes (type, value, turn, timestamp) VALUES (?, ?, ?, ?)")
 	if err != nil {
 		rollbackErr := tx.Rollback()
 		if rollbackErr != nil {
@@ -80,7 +84,7 @@ func BatchInsertItems(items []models.DBser) error {
 
 	for i, item := range items {
 		dbDatum := item.DbData()
-		_, err = stmt.Exec(dbDatum.DataType, dbDatum.Value, dbDatum.IpAddr)
+		_, err = stmt.Exec(dbDatum.DataType, dbDatum.Value, iteration, time.Now())
 		if err != nil {
 			rollbackErr := tx.Rollback()
 			if rollbackErr != nil {
@@ -94,8 +98,56 @@ func BatchInsertItems(items []models.DBser) error {
 	if err != nil {
 		return fmt.Errorf("failed to commit final transaction: %w", err)
 	}
-
+	iteration += 1
 	return nil
+}
+
+type DbItem struct {
+	Value int
+	Count int
+}
+
+func GetAllItemsForType(dataType string) (error, map[int][4]int) {
+	result := map[int][4]int{}
+	err := db.Ping()
+	if err != nil {
+		return fmt.Errorf("Failed to connect to database: %v", err), nil
+	}
+
+	query := fmt.Sprintf(`SELECT value, turn, COUNT(*) as value_count
+		FROM Votes
+		WHERE type = %s
+		GROUP BY value
+		ORDER BY value_count DESC;`, dataType)
+
+	rows, err := db.Query(query)
+	if err != nil {
+		return err, nil
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var turn int
+		var value int
+		var count int
+		if err := rows.Scan(&value, &turn, &count); err != nil {
+			return fmt.Errorf("scan failed: %w", err), nil
+		}
+		arr, exists := result[turn]
+		if !exists {
+			arr = [4]int{}
+		}
+
+		arr[value]++
+
+		result[turn] = arr
+	}
+
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("rows iteration error: %w", err), nil
+	}
+
+	return nil, result
 }
 
 func CloseDb() error {

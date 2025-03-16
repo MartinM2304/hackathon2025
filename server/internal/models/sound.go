@@ -9,7 +9,6 @@ func (e *Sound) DbData() DbData {
 	return DbData{
 		DataType: "sound",
 		Value:    int(e.Id),
-		IpAddr:   e.IpAddr,
 	}
 }
 

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/MartinM2304/hackathon2025/internal/database"
@@ -123,6 +124,8 @@ func Aggregate() {
 	aggregateEmojis()
 	aggregateSounds()
 
+	fmt.Println("Aggregating")
+
 	items := []models.DBser{}
 
 	for _, emoji := range emojis {
@@ -137,7 +140,10 @@ func Aggregate() {
 		items = append(items, &sound)
 	}
 
-	database.BatchInsertItems(items)
+	err := database.BatchInsertItems(items)
+	if err != nil {
+		fmt.Printf("Errror %v\n", err)
+	}
 
 	directionsMutex.Lock()
 	directions = []models.Direction{}

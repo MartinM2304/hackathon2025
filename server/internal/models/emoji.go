@@ -9,7 +9,6 @@ func (e Emoji) DbData() DbData {
 	return DbData{
 		DataType: "emoji",
 		Value:    int(e.Id),
-		IpAddr:   e.IpAddr,
 	}
 }
 
