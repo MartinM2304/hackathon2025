@@ -114,13 +114,13 @@ func GetAllItemsForType(dataType string) (error, map[int][4]int) {
 		return fmt.Errorf("Failed to connect to database: %v", err), nil
 	}
 
-	query := fmt.Sprintf(`SELECT value, turn, COUNT(*) as value_count
+	query := `SELECT value, turn, COUNT(*) as value_count
 		FROM Votes
-		WHERE type = \"%s\"
+		WHERE type = ?
 		GROUP BY value
-		ORDER BY value_count DESC;`, dataType)
+		ORDER BY value_count DESC;`
 
-	rows, err := db.Query(query)
+	rows, err := db.Query(query, dataType)
 	if err != nil {
 		return err, nil
 	}
