@@ -112,8 +112,8 @@ func GetAllItemsForType(dataType string) (error, map[int][4]int) {
 	query := `SELECT value, turn, COUNT(*) as value_count
 		FROM Votes
 		WHERE type = ?
-		GROUP BY value
-		ORDER BY value_count DESC;`
+		GROUP BY turn, value
+		ORDER BY turn, value_count DESC;`
 
 	rows, err := db.Query(query, dataType)
 	if err != nil {
