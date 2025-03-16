@@ -57,6 +57,30 @@ func postSound(c *fiber.Ctx) error {
 func getData(c *fiber.Ctx) error {
 	data := services.GetAggregatedData()
 
-	c.Status(200).JSON(data)
+	err := c.Status(200).JSON(data)
+	if err != nil {
+		c.Status(500)
+		return err
+	}
+	return nil
+}
+
+func getStats(c *fiber.Ctx) error {
+	entropy, err := services.CalculateEnthropy()
+	if err != nil {
+		c.Status(500)
+		return err
+	}
+
+	body := models.StatsJson{
+		Enthropy: entropy,
+	}
+
+	err = c.Status(200).JSON(body)
+	if err != nil {
+		c.Status(500)
+		return err
+	}
+
 	return nil
 }

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/MartinM2304/hackathon2025/internal/database"
 	"github.com/MartinM2304/hackathon2025/internal/models"
 )
 
@@ -61,4 +62,13 @@ func GetAggregatedData() models.AggregatedData {
 	sendNotification(aggregatedData)
 
 	return aggregatedData
+}
+
+func CalculateEnthropy() ([]models.Pair, error) {
+	err, directionsData := database.GetAllItemsForType("direction")
+	if err != nil {
+		return nil, err
+	}
+	enthropy := calculateDirectionEntropy(directionsData)
+	return enthropy, nil
 }

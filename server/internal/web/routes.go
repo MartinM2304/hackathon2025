@@ -45,4 +45,5 @@ func Register(router fiber.Router) {
 	router.Post("/sound", postSound)
 
 	router.Get("/data", getData)
+	router.Get("/stats", getStats)
 }

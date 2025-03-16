@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"math"
 	"sync"
 
 	"github.com/MartinM2304/hackathon2025/internal/database"
@@ -156,4 +157,39 @@ func Aggregate() {
 	soundsMutex.Lock()
 	sounds = []models.Sound{}
 	soundsMutex.Unlock()
+}
+
+func calculateDirectionEntropy(userVotes map[int][4]int) []models.Pair {
+	var result []models.Pair
+
+	for turn, votes := range userVotes {
+		totalVotes := [4]float64{0, 0, 0, 0}
+		total := 0.0
+
+		for dir := 0; dir < 4; dir++ {
+			totalVotes[dir] = float64(votes[dir])
+			total += totalVotes[dir]
+		}
+
+		if total == 0 {
+			result = append(result, models.Pair{Turn: turn, Entropy: 0})
+			continue
+		}
+
+		entropy := 0.0
+		for _, count := range totalVotes {
+			if count > 0 {
+				p := count / total
+				entropy -= p * math.Log2(p)
+			}
+		}
+
+		maxEntropy := math.Log2(4)
+		normalizedEntropy := entropy / maxEntropy
+		entropyPercent := int(math.Round(normalizedEntropy * 100))
+
+		result = append(result, models.Pair{Turn: turn, Entropy: entropyPercent})
+	}
+
+	return result
 }
