@@ -116,7 +116,7 @@ func GetAllItemsForType(dataType string) (error, map[int][4]int) {
 
 	query := fmt.Sprintf(`SELECT value, turn, COUNT(*) as value_count
 		FROM Votes
-		WHERE type = %s
+		WHERE type = \"%s\"
 		GROUP BY value
 		ORDER BY value_count DESC;`, dataType)
 
