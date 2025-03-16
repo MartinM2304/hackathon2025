@@ -185,6 +185,60 @@ func GetAllByType(dataType string) (error, []models.StatPair) {
 	return nil, result
 }
 
+func DumpVotesTable() ([]models.Vote, error) {
+	// SQL query to get all data from the Votes table
+	query := `
+		SELECT id, type, value, turn, timestamp
+		FROM Votes
+		ORDER BY id
+	`
+
+	// Execute the query
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, fmt.Errorf("query failed: %w", err)
+	}
+	defer rows.Close()
+
+	// Collect the results
+	var votes []models.Vote
+	for rows.Next() {
+		var v models.Vote
+		var timestamp sql.NullString // Handle potential NULL values in timestamp
+
+		if err := rows.Scan(&v.ID, &v.Type, &v.Value, &v.Turn, &timestamp); err != nil {
+			return nil, fmt.Errorf("scan failed: %w", err)
+		}
+
+		// Convert timestamp string to time.Time if not NULL
+		if timestamp.Valid {
+			// SQLite datetime format can vary, adjust the parsing format if needed
+			t, err := time.Parse("2006-01-02 15:04:05", timestamp.String)
+			if err != nil {
+				// Try alternative format if the first one fails
+				t, err = time.Parse("2006-01-02T15:04:05Z", timestamp.String)
+				if err != nil {
+					return nil, fmt.Errorf(
+						"failed to parse timestamp '%s': %w",
+						timestamp.String,
+						err,
+					)
+				}
+			}
+			v.Timestamp = t
+		}
+
+		votes = append(votes, v)
+	}
+
+	// Check for errors during iteration
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows iteration error: %w", err)
+	}
+
+	return votes, nil
+}
+
 func CloseDb() error {
 	err := db.Close()
 	if err != nil {

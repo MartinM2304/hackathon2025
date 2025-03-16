@@ -1,33 +1,12 @@
 package web
 
 import (
+	"github.com/MartinM2304/hackathon2025/internal/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func Register(router fiber.Router) {
-	// router.Use(adaptor.HTTPMiddleware(func(h http.Handler) http.Handler {
-	// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	// 		// Allow any origin to access the resource.
-	// 		w.Header().Set("Access-Control-Allow-Origin", "*")
-	// 		// Allow these methods.
-	// 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-	//
-	// 		w.Header().
-	// 			Set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept, X-Requested-With")
-	// 		// Expose specific headers to the client.
-	// 		w.Header().Set("Access-Control-Expose-Headers", "Authorization")
-	//
-	// 		// If it's a preflight OPTIONS request, respond immediately.
-	// 		if r.Method == http.MethodOptions {
-	// 			w.WriteHeader(http.StatusOK)
-	// 			return
-	// 		}
-	//
-	// 		h.ServeHTTP(w, r)
-	// 	})
-	// }))
-
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     "https://client.g8row.xyz, http://localhost:3001",    // Allow all origins (or specify your frontend URL)
 		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",                        // Allowed methods
@@ -46,4 +25,19 @@ func Register(router fiber.Router) {
 
 	router.Get("/data", getData)
 	router.Get("/stats", getStats)
+	router.Get("/dump", func(c *fiber.Ctx) error {
+		votes, err := database.DumpVotesTable()
+		if err != nil {
+			c.Status(500)
+			return err
+		}
+
+		err = c.Status(200).JSON(votes)
+		if err != nil {
+			c.Status(500)
+			return err
+		}
+
+		return nil
+	})
 }
