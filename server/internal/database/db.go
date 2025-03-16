@@ -145,6 +145,46 @@ func GetAllItemsForType(dataType string) (error, map[int][4]int) {
 	return nil, result
 }
 
+func GetAllByType(dataType string) (error, []models.StatPair) {
+	result := []models.StatPair{}
+	err := db.Ping()
+	if err != nil {
+		return fmt.Errorf("Failed to connect to database: %v", err), nil
+	}
+
+	query := `SELECT value, COUNT(*) as count
+		FROM Votes
+		WHERE type = ?
+		GROUP BY value
+		ORDER BY count DESC`
+
+	rows, err := db.Query(query, dataType)
+	if err != nil {
+		return err, nil
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var value int
+		var count int
+		if err := rows.Scan(&value, &count); err != nil {
+			return fmt.Errorf("scan failed: %w", err), nil
+		}
+
+		result = append(result, models.StatPair{
+			Id:    value,
+			Count: count,
+		})
+
+	}
+
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("rows iteration error: %w", err), nil
+	}
+
+	return nil, result
+}
+
 func CloseDb() error {
 	err := db.Close()
 	if err != nil {

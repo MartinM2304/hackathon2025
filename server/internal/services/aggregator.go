@@ -161,8 +161,8 @@ func Aggregate() {
 	soundsMutex.Unlock()
 }
 
-func calculateDirectionEntropy(userVotes map[int][4]int) []models.Pair {
-	var result []models.Pair
+func calculateDirectionEntropy(userVotes map[int][4]int) []models.EntropyPair {
+	var result []models.EntropyPair
 
 	for turn, votes := range userVotes {
 		totalVotes := [4]float64{0, 0, 0, 0}
@@ -174,7 +174,7 @@ func calculateDirectionEntropy(userVotes map[int][4]int) []models.Pair {
 		}
 
 		if total == 0 {
-			result = append(result, models.Pair{Turn: turn, Entropy: 0})
+			result = append(result, models.EntropyPair{Turn: turn, Entropy: 0})
 			continue
 		}
 
@@ -190,7 +190,7 @@ func calculateDirectionEntropy(userVotes map[int][4]int) []models.Pair {
 		normalizedEntropy := entropy / maxEntropy
 		entropyPercent := int(math.Round(normalizedEntropy * 100))
 
-		result = append(result, models.Pair{Turn: turn, Entropy: entropyPercent})
+		result = append(result, models.EntropyPair{Turn: turn, Entropy: entropyPercent})
 	}
 
 	return result

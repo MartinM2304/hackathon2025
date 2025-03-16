@@ -63,8 +63,27 @@ func getStats(c *fiber.Ctx) error {
 		return err
 	}
 
+	emojiData, err := services.CalculateStats("emoji")
+	if err != nil {
+		c.Status(500)
+		return err
+	}
+	directionData, err := services.CalculateStats("direction")
+	if err != nil {
+		c.Status(500)
+		return err
+	}
+	soundData, err := services.CalculateStats("sound")
+	if err != nil {
+		c.Status(500)
+		return err
+	}
+
 	body := models.StatsJson{
-		Enthropy: entropy,
+		Enthropy:  entropy,
+		Emoji:     emojiData,
+		Direction: directionData,
+		Sound:     soundData,
 	}
 
 	err = c.Status(200).JSON(body)

@@ -64,11 +64,19 @@ func GetAggregatedData() models.AggregatedData {
 	return aggregatedData
 }
 
-func CalculateEnthropy() ([]models.Pair, error) {
+func CalculateEnthropy() ([]models.EntropyPair, error) {
 	err, directionsData := database.GetAllItemsForType("direction")
 	if err != nil {
 		return nil, err
 	}
 	enthropy := calculateDirectionEntropy(directionsData)
 	return enthropy, nil
+}
+
+func CalculateStats(dataType string) ([]models.StatPair, error) {
+	err, statData := database.GetAllByType(dataType)
+	if err != nil {
+		return nil, err
+	}
+	return statData, nil
 }
