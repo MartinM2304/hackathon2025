@@ -9,9 +9,9 @@ export interface EntropyData {
   entropy: number;
 }
 
-interface EmojiData {
-  id: number;
-  count: number;
+export interface EmojiData {
+  Id: number;
+  Count: number;
 }
 
 export interface DirectionData {
@@ -20,8 +20,8 @@ export interface DirectionData {
 }
 
 interface SoundData {
-  id: number;
-  count: number;
+  Id: number;
+  Count: number;
 }
 
 interface StatsData {
@@ -66,7 +66,7 @@ export default function MainStats() {
           <MovementPieChart data={statsData.direction} />
         </div>
         <div className="flex justify-center">
-          <EmojiBarChart />
+          <EmojiBarChart data={statsData.emoji} />
         </div>
       </div>
     </div>
