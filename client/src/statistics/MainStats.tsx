@@ -3,6 +3,7 @@ import { CollaborationChart } from "./CollaborationChart";
 import { EmojiBarChart } from "./EmojiBarChart";
 import { MovementPieChart } from "./MovementPieChart";
 import { SERVER_URL } from "@/config";
+import { SoundsBarChart } from "./SoundsChart";
 
 export interface EntropyData {
   turn: number;
@@ -19,7 +20,7 @@ export interface DirectionData {
   Count: number;
 }
 
-interface SoundData {
+export interface SoundData {
   Id: number;
   Count: number;
 }
@@ -67,6 +68,9 @@ export default function MainStats() {
         </div>
         <div className="flex justify-center">
           <EmojiBarChart data={statsData.emoji} />
+        </div>
+        <div className="flex justify-center">
+          <SoundsBarChart data={statsData.sound} />
         </div>
       </div>
     </div>
