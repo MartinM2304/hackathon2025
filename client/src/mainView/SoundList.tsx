@@ -5,15 +5,15 @@ import { SERVER_URL } from "@/config";
 export const SOUNDS = {
   BARK: 0,
   MEOW_MEOW: 1,
-  OPERA: 2,
-  DRUM_BEAT: 3,
+  HELLO: 2,
+  BYE: 3,
 };
 
 const SOUND_LABELS: Record<number, string> = {
   [SOUNDS.BARK]: "Dog Bark",
   [SOUNDS.MEOW_MEOW]: "Cat Meow",
-  [SOUNDS.OPERA]: "Opera Singing",
-  [SOUNDS.DRUM_BEAT]: "Drum Beat",
+  [SOUNDS.HELLO]: "Hello",
+  [SOUNDS.BYE]: "Bye",
 };
 
   
